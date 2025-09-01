@@ -29,7 +29,8 @@ export const routes: Routes = [
       {
         path: 'home',
         loadComponent: () =>
-          import('./business/home/home.component').then((m) => m.HomeComponent),
+          // import('./business/home/home.component').then((m) => m.HomeComponent),
+          import('./business/dashboard-z1/pages/map-page/map-page.component').then((m) => m.MapPageComponent),
       },
       {
         path: 'map',

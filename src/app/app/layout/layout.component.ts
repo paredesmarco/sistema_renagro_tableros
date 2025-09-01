@@ -33,7 +33,7 @@ export class LayoutComponent {
   status = false;
   token = '';
 
-  title = 'Template Base';
+  title = 'GL-Agro Dashboard';
   menuItems: MenuItem[] = [];
   userName: string = '';
   userRole: string = '';
