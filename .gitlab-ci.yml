@@ -1,0 +1,91 @@
+stages:
+  - setup
+  - build
+  - deploy
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  project_name: "template-mag"
+  home: "/var/www/html/angular"
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "desarrollo"
+      variables:
+        ip_server: "10.10.1.106"
+        path_server: $home/$CI_COMMIT_REF_NAME/$project_name
+        environment: "development"
+    - if: $CI_COMMIT_REF_NAME == "pruebas"
+      variables:
+        ip_server: "10.10.1.106"
+        path_server: $home/$CI_COMMIT_REF_NAME/$project_name
+        environment: "testing"
+    #Comnetar para produccion
+    - if: $CI_COMMIT_REF_NAME == "desarrollo"
+      variables:
+        ip_server: "10.10.1.106"
+        path_server: $home/$CI_COMMIT_REF_NAME/$project_name
+        environment: "development"
+    #Descomentar para produccion
+    #  - if: $CI_COMMIT_REF_NAME == ""
+    #   variables:
+    #     ip_server: "10.10.1.241"
+    #     path_server: $home/$CI_COMMIT_REF_NAME/$project_name
+    #     environment: "production"
+    - when: always
+
+# TRABAJO OCULTO PARA CACHE SE USA EN LOS JOBS CON EXTENDS
+.dependencies_cache:
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm
+      - node_modules
+    policy: pull-push
+
+setup_app:
+  stage: setup
+  script:
+    - npm install -f
+  extends: .dependencies_cache
+  tags:
+    - front
+    - angular
+  only:
+    - desarrollo
+    - pruebas
+    - master
+
+build_app:
+  stage: build
+  needs: ["setup_app"]
+  script:
+    - ng build --configuration=$environment --base-href=/angular/$CI_COMMIT_REF_NAME/$project_name/
+    - cp ./src/acceso/$environment/.htaccess $CI_PROJECT_DIR/dist/$project_name/browser
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/dist/$project_name/browser
+  extends: .dependencies_cache
+  tags:
+    - front
+    - angular
+  only:
+    - desarrollo
+    - pruebas
+    - master
+
+deploy_app:
+  stage: deploy
+  needs: ["build_app"]
+  script:
+    - ssh $NEST_SSH_USUARIO@$ip_server " rm -rf $path_server"
+    - scp -rp $CI_PROJECT_DIR/dist/$project_name/browser $NEST_SSH_USUARIO@$ip_server:$path_server
+  tags:
+    - front
+    - angular
+  only:
+    - desarrollo
+    - pruebas
+    - master

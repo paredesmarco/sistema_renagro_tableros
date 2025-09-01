@@ -1,0 +1,16 @@
+<div class="container">
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Salir del sistema</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>        
+        <h3>    Desea salir?</h3>                
+    </mat-card-content>
+    <mat-dialog-actions align="end">
+        <button mat-raised-button color="alert" type="button" (click)="cancel()">Cancelar</button>
+        <button mat-raised-button color="primary" (click)="logout()">
+            <mat-icon>check_circle</mat-icon> Si
+          </button>
+        </mat-dialog-actions>
+</mat-card>
+</div>

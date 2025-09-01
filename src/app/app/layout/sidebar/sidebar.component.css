@@ -1,0 +1,95 @@
+.sidenav {
+    width: 260px;
+    background-color: #f5f5f5;
+    border-right: 1px solid #e0e0e0;
+}
+
+.user-panel {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: linear-gradient(135deg, #a084be, #695094);
+    color: white;
+}
+
+.avatar {
+    margin-right: 12px;
+}
+
+.avatar-icon {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.name {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.role {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.menu-expansion {
+    box-shadow: none !important;
+    background: transparent;
+}
+
+.menu-expansion .mat-expansion-panel-header {
+    padding: 0 16px;
+}
+
+.menu-expansion .mat-expansion-panel-body {
+    padding: 0;
+}
+
+.mat-panel-title {
+    align-items: center;
+}
+
+.mat-panel-title mat-icon {
+    margin-right: 16px;
+}
+
+.submenu {
+    padding-left: 16px;
+}
+
+.profile-section {
+    margin-top: 8px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    margin: 8px;
+}
+
+.profile-selector {
+    position: relative;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.profile-selector:hover {
+    background-color: rgba(103, 58, 183, 0.1);
+}
+
+.arrow-forward {
+    position: absolute;
+    right: 16px;
+    font-size: 14px;
+    color: #666;
+}
+
+.avatar {
+    cursor: pointer;
+}
+
+.user-details {
+    cursor: pointer;
+}

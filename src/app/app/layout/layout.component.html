@@ -1,0 +1,20 @@
+@if (status) {
+<app-header [title]="title" [userName]="userName" (toggleSidenav)="sidenav.toggle()"
+    (roleSelected)="onRoleSelected($event)">
+</app-header>
+
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" class="sidenav">
+        <app-sidebar [userName]="userName" [userRole]="userRole" [menuItems]="menuItems" (pageSelected)="goPage($event)"
+            (roleSelected)="onRoleSelected($event)">
+            >
+        </app-sidebar>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="content">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+} @else {
+<router-outlet></router-outlet>
+}

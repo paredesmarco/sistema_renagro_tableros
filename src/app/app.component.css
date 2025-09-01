@@ -1,0 +1,8 @@
+.custom-snackbar {
+    background-color: #4CAF50; /* Fondo verde */
+    color: white; /* Texto blanco */
+    text-align: center; /* Centrar texto */
+    justify-content: center; /* Centrar contenido horizontalmente */
+    border-radius: 4px; /* Bordes redondeados */
+    font-weight: bold; /* Texto en negrita */
+  }

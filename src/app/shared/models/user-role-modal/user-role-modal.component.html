@@ -1,0 +1,17 @@
+<div mat-dialog-content>
+  <p>Seleccione el perfil con el que desea trabajar:</p>
+  <mat-form-field class="select-rol">
+    <mat-label>Perfil</mat-label>
+    <mat-select [(ngModel)]="selectedValue" name="perfil" class="select-rol" >
+      @for (role of roles; track role) {
+        <mat-option  [value]="role.upf_id"  [class.selected]="selectedRole && selectedRole.upf_id  === role.upf_id" (onSelectionChange)="selectRole(role)" >
+          {{role.pfl_nombre}}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions >
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" [disabled]="!selectedRole" (click)="onConfirm()">Confirmar</button>
+</div>

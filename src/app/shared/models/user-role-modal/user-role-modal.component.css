@@ -1,0 +1,17 @@
+::ng-deep .mat-mdc-dialog-container {
+  --mdc-dialog-container-color: white !important;
+}
+
+.mdc-snackbar mat-mdc-snack-bar-container mat-snack-bar-container-enter mat-snack-bar-container-animations-enabled{
+  background: white;
+}
+.mdc-snackbar__surface mat-mdc-snackbar-surface{
+  background: white!;
+}
+.mat-mdc-snack-bar-label mdc-snackbar__label{
+  background: white!;
+}
+
+.select-rol{
+  width: 100%;
+}

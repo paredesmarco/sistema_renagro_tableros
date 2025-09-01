@@ -1,0 +1,60 @@
+<div class="user-panel">
+  <div class="avatar" matTooltip="Redireccionar a Home" (click)="goHome()">
+    <mat-icon class="avatar-icon">account_circle</mat-icon>
+  </div>
+
+  <div class="user-details" (click)="goHome()">
+    <span class="name">{{ userName }}</span>
+    <span class="role">{{ userRole }}</span>
+  </div>
+</div>
+
+<mat-nav-list>
+  @for(item of menuItems; track item) {
+
+  <ng-container *ngIf="item.children && item.children.length > 0; else simpleMenu">
+    <!-- Menú con submenú -->
+    <mat-expansion-panel class="menu-expansion" #panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-nav-list class="submenu">
+        @for(child of item.children; track child) {
+        <a mat-list-item (click)="navigate(child.route); panel.close()">
+          <mat-icon matListItemIcon>{{ child.icon }}</mat-icon>
+          <span>{{ child.label }}</span>
+        </a>
+        }
+      </mat-nav-list>
+    </mat-expansion-panel>
+  </ng-container>
+
+  <ng-template #simpleMenu>
+    <!-- Menú simple -->
+    <a mat-list-item (click)="navigate(item.route)">
+      <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+      <span>{{ item.label }}</span>
+    </a>
+
+  </ng-template>
+
+  }
+  <!-- Al final de mat-nav-list, después del @for -->
+  <mat-divider></mat-divider>
+  <div class="profile-section">
+    <a mat-list-item (click)="goPerfil()" class="profile-selector">
+      <mat-icon matListItemIcon>manage_accounts</mat-icon>
+      <span>Cambiar Perfil</span>
+      <mat-icon class="arrow-forward">arrow_forward_ios</mat-icon>
+    </a>
+    <a mat-list-item (click)="salir()" class="profile-selector">
+      <mat-icon matListItemIcon>exit_to_app</mat-icon>
+      <span>Salir</span>
+      <mat-icon class="arrow-forward">arrow_forward_ios</mat-icon>
+    </a>
+  </div>
+</mat-nav-list>

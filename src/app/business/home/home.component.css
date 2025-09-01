@@ -1,0 +1,139 @@
+/* app.component.scss */
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .header-toolbar {
+    background: linear-gradient(135deg, #a084be, #695094);
+    color: #ffffff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .title {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-left: 16px;
+  }
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    
+    span {
+      margin-right: 10px;
+    }
+  }
+  
+  .sidenav-container {
+    flex: 1;
+    margin-top: 64px; /* Altura de la toolbar */
+  }
+  
+  .sidenav {
+    width: 260px;
+    background-color: #f5f5f5;
+    border-right: 1px solid #e0e0e0;
+  }
+  
+  .user-panel {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: linear-gradient(135deg, #a084be, #695094);
+    color: white;
+    
+    .avatar {
+      margin-right: 12px;
+      
+      .avatar-icon {
+        font-size: 48px;
+        height: 48px;
+        width: 48px;
+      }
+    }
+    
+    .user-details {
+      display: flex;
+      flex-direction: column;
+      
+      .name {
+        font-weight: 500;
+        font-size: 16px;
+      }
+      
+      .role {
+        font-size: 12px;
+        opacity: 0.8;
+      }
+    }
+  }
+  
+  .menu-expansion {
+    box-shadow: none !important;
+    background: transparent;
+    
+    .mat-expansion-panel-header {
+      padding: 0 16px;
+    }
+    
+    .mat-expansion-panel-body {
+      padding: 0;
+    }
+    
+    .mat-panel-title {
+      align-items: center;
+      
+      mat-icon {
+        margin-right: 16px;
+      }
+    }
+  }
+  
+  .submenu {
+    padding-left: 16px;
+  }
+  
+  mat-nav-list {
+    a {
+      color: rgba(0, 0, 0, 0.87);
+      
+      mat-icon {
+        color: #695094;
+        margin-right: 16px;
+      }
+      
+      &.active {
+        background-color: rgba(105, 80, 148, 0.1);
+        color: #695094;
+      }
+    }
+  }
+  
+  .content {
+    padding: 20px;
+    background-color: #fafafa;
+  }
+  
+  .welcome-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    
+    h1 {
+      color: #695094;
+      margin-top: 0;
+    }
+  }

@@ -1,0 +1,47 @@
+.header-toolbar {
+    background: linear-gradient(135deg, #a084be, #695094);
+    color: #ffffff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+}
+
+.title {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-left: 16px;
+    white-space: nowrap;
+    font-size: 1.2rem;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.user-info span {
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 1rem;
+    }
+
+    .user-info span {
+        display: none;
+        /* Oculta el texto del usuario en móviles */
+    }
+}

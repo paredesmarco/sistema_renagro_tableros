@@ -1,0 +1,43 @@
+.restore-password-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #a084be, #695094);
+  }
+  
+  .restore-password-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background: white;
+  }
+  
+  .full-width {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  mat-card-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  mat-card-subtitle {
+    font-size: 16px;
+    color: #666;
+  }
+  
+  button[mat-raised-button] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  mat-card-actions {
+    display: flex;
+    justify-content: center;
+  }
