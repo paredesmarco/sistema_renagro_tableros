@@ -4,11 +4,11 @@ import { MatCard, MatCardTitle, MatCardHeader, MatCardContent } from "@angular/m
 import { MatDivider } from "@angular/material/divider";
 
 @Component({
-  selector: 'app-card-value',
+  selector: 'app-card-porcentaje',
   imports: [MatCard, MatCardTitle, MatCardHeader, MatDivider, MatCardContent],
-  templateUrl: './card-value.component.html',
+  templateUrl: './card-porcentaje.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './card-value.component.css'
+  styleUrl: './card-porcentaje.component.css'
 })
 export class CardValueComponent {
   dato = input.required<Valor>();

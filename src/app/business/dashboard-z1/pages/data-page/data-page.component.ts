@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { CardValueComponent } from "../../components/card-value/card-value.component";
+import { CardValueComponent } from "../../components/card-porcentaje/card-porcentaje.component";
 import { CardPromedioComponent } from "../../components/card-promedio/card-promedio.component";
 import { Porcentaje } from '../../interfaces/porcentaje.interface';
 
