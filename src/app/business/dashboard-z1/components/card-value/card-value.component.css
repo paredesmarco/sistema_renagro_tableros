@@ -1,0 +1,26 @@
+.card-content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.right-content {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    gap: 8px;
+    /* Espacio entre los textos */
+}
+
+.percentage {
+    font-size: 2em;
+    /* Tamaño de fuente más grande para el porcentaje */
+    font-weight: bold;
+    color: #3f51b5;
+    /* Color de ejemplo (Indigo de Material Design) */
+}

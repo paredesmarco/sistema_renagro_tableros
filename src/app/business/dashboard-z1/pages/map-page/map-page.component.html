@@ -1,12 +1,8 @@
-<div class="grid gap-4">
-    <div>
-        <div class="h-auto max-w-full rounded-lg">
-            <app-map-view></app-map-view>
-        </div>
-    </div>
-    <div class="grid grid-cols-5 gap-2">
-        @for (valor of valores(); track valor.titulo) {
-        <app-card-value [dato]="valor"></app-card-value>
-        }
-    </div>
+<div>
+    <app-map-view></app-map-view>
+</div>
+<div class="card-container">
+    @for (valor of valores(); track valor.titulo) {
+    <app-card-value [dato]="valor"></app-card-value>
+    }
 </div>

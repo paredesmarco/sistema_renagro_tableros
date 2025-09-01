@@ -1,13 +1,20 @@
-<div class="h-auto max-w-full rounded-lg border border-black p-2" style="background-color: white;">
-    <div class="min-h-[2rem] leading-none">
-        <span class="text-xs font-bold leading-none">{{ dato().titulo }}</span>
-    </div>
+<mat-card>
+    <div class="card-content-wrapper">
+        <div class="left-content">
+            <mat-card-title>
+                {{ dato().titulo }}
+            </mat-card-title>
+            <span class="percentage">
+                {{ dato().ejecutado/dato().planificado * 100 }}%
+            </span>
+        </div>
 
-    <div class="flex items-center gap-4 mt-2">
-        <span class="text-2xl font-extrabold">{{ dato().ejecutado/dato().planificado * 100 }}%</span>
-        <div class="flex flex-col text-sm">
-            <span><b>Planificados:</b> {{ dato().planificado }}</span>
-            <span><b>Ejecutados:</b> {{ dato().ejecutado }}</span>
+        <div class="right-content">
+            <p class="text-right">
+                <span><b>Planificados:</b> {{ dato().planificado }}</span>
+                <br>
+                <span><b>Ejecutados:</b> {{ dato().ejecutado }}</span>
+            </p>
         </div>
     </div>
-</div>
+</mat-card>

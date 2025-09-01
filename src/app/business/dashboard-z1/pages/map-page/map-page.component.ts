@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CardValueComponent } from "../../components/card-value/card-value.component";
 import { MapViewComponent } from "../../components/map-view/map-view.component";
 import { Valor } from '../../interfaces/valor.interface';
+import { MatCard } from "@angular/material/card";
 
 const datos: Valor[] = [
   {
@@ -59,9 +60,10 @@ const datos: Valor[] = [
 
 @Component({
   selector: 'app-map-page',
-  imports: [CardValueComponent, MapViewComponent],
+  imports: [CardValueComponent, MapViewComponent, MatCard],
   templateUrl: './map-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './map-page.component.css'
 })
 export class MapPageComponent {
   valores = signal(datos);
