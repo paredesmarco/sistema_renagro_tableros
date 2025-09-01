@@ -31,7 +31,16 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./business/home/home.component').then((m) => m.HomeComponent),
       },
-      // Aquí agregarás más rutas protegidas en el futuro
+      {
+        path: 'map',
+        loadComponent: () =>
+          import('./business/dashboard-z1/pages/map-page/map-page.component').then((m) => m.MapPageComponent),
+      },
+      {
+        path: 'data',
+        loadComponent: () =>
+          import('./business/dashboard-z1/pages/data-page/data-page.component').then((m) => m.DataPageComponent),
+      },
       {
         path: 'usuarios',
         loadComponent: () =>

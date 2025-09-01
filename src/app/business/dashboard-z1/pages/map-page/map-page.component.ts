@@ -63,6 +63,6 @@ const datos: Valor[] = [
   templateUrl: './map-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class MapPageComponent {
+export class MapPageComponent {
   valores = signal(datos);
 }

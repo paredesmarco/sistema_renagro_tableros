@@ -24,6 +24,6 @@ const datos: Porcentaje[] = [
   templateUrl: './data-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class DataPageComponent {
+export class DataPageComponent {
   valores = signal(datos);
 }

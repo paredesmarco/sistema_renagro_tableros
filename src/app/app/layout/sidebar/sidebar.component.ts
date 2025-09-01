@@ -57,4 +57,12 @@ export class SidebarComponent {
   goHome() {
     this.router.navigateByUrl('/home');
   }
+
+  goMap() {
+    this.router.navigateByUrl('/map');
+  }
+
+  goData() {
+    this.router.navigateByUrl('/data');
+  }
 }
