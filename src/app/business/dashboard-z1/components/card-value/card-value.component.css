@@ -2,13 +2,14 @@
 mat-card {
     height: 115px;
     /* Ejemplo: Fija una altura para todas las tarjetas */
+    border: 1px solid black;
 }
 
 /* Estilos para el título para que siempre tenga el mismo alto */
 .fixed-title {
     display: block;
     /* Altura mínima para dos líneas con interlineado mínimo */
-    min-height: 35px;
+    min-height: 30px;
     /* Un valor que funciona bien para dos líneas de texto */
     overflow: hidden;
     /* Oculta el texto que exceda el espacio */
@@ -24,8 +25,8 @@ mat-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .percentage {
