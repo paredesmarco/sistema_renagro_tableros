@@ -1,0 +1,42 @@
+/* Estilos para el contenedor de la tarjeta */
+mat-card {
+    height: 115px;
+    /* Ejemplo: Fija una altura para todas las tarjetas */
+    border: 1px solid black;
+}
+
+/* Estilos para el título para que siempre tenga el mismo alto */
+.fixed-title {
+    display: block;
+    /* Altura mínima para dos líneas con interlineado mínimo */
+    min-height: 30px;
+    /* Un valor que funciona bien para dos líneas de texto */
+    overflow: hidden;
+    /* Oculta el texto que exceda el espacio */
+    text-overflow: ellipsis;
+    font-size: 13px;
+
+    /* Ajuste para el interlineado mínimo */
+    line-height: 1;
+}
+
+/* Estilos de la parte inferior de la tarjeta */
+.bottom-content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.percentage {
+    font-size: 2em;
+    font-weight: bold;
+    color: #3f51b5;
+}
+
+.right-section p {
+    margin: 0;
+    text-align: right;
+    font-size: 12px;
+}

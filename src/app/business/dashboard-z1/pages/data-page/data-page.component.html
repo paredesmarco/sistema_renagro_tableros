@@ -1,7 +1,5 @@
-<div class="grid gap-4">
-    <div class="grid grid-cols-5 gap-2">
-        @for (valor of valores(); track valor.titulo) {
-        <app-card-promedio [dato]="valor"></app-card-promedio>
-        }
-    </div>
+<div class="card-container">
+    @for (valor of valores(); track valor.titulo) {
+    <app-card-promedio [dato]="valor"></app-card-promedio>
+    }
 </div>

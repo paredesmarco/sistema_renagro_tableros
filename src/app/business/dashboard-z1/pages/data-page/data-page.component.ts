@@ -23,6 +23,7 @@ const datos: Porcentaje[] = [
   imports: [CardValueComponent, CardPromedioComponent],
   templateUrl: './data-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './data-page.component.css'
 })
 export class DataPageComponent {
   valores = signal(datos);
