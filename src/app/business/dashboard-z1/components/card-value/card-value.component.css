@@ -1,26 +1,37 @@
-.card-content-wrapper {
+/* Estilos para el contenedor de la tarjeta */
+mat-card {
+    height: 200px;
+    /* Ejemplo: Fija una altura para todas las tarjetas */
+}
+
+/* Estilos para el título para que siempre tenga el mismo alto */
+.fixed-title {
+    display: block;
+    /* Asegura que el título es un bloque y no en línea */
+    min-height: 48px;
+    /* Un valor que funciona bien para dos líneas de texto */
+    overflow: hidden;
+    /* Oculta el texto que exceda el espacio */
+    text-overflow: ellipsis;
+    /* Añade puntos suspensivos si el texto se desborda */
+}
+
+/* Estilos de la parte inferior de la tarjeta */
+.bottom-content-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.left-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.right-content {
-    display: flex;
-    flex-direction: column;
-    text-align: right;
-    gap: 8px;
-    /* Espacio entre los textos */
+    padding-top: 16px;
+    padding-bottom: 16px;
 }
 
 .percentage {
     font-size: 2em;
-    /* Tamaño de fuente más grande para el porcentaje */
     font-weight: bold;
     color: #3f51b5;
-    /* Color de ejemplo (Indigo de Material Design) */
+}
+
+.right-section p {
+    margin: 0;
+    text-align: right;
 }

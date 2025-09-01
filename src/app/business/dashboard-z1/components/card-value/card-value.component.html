@@ -1,20 +1,22 @@
 <mat-card>
-    <div class="card-content-wrapper">
-        <div class="left-content">
-            <mat-card-title>
-                {{ dato().titulo }}
-            </mat-card-title>
+    <mat-card-header>
+        <mat-card-title class="fixed-title">
+            {{ dato().titulo }}
+        </mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content class="bottom-content-wrapper">
+        <div class="left-section">
             <span class="percentage">
-                {{ dato().ejecutado/dato().planificado * 100 }}%
+                {{ (dato().ejecutado/dato().planificado * 100) }}%
             </span>
         </div>
-
-        <div class="right-content">
-            <p class="text-right">
+        <div class="right-section">
+            <p>
                 <span><b>Planificados:</b> {{ dato().planificado }}</span>
                 <br>
                 <span><b>Ejecutados:</b> {{ dato().ejecutado }}</span>
             </p>
         </div>
-    </div>
+    </mat-card-content>
 </mat-card>
