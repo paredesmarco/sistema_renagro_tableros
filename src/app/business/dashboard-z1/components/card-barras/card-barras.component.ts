@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BaseChartDirective } from 'ng2-charts'; // ✅ Corrected import
+import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType, Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
@@ -26,6 +26,11 @@ export class CardBarrasComponent implements OnInit {
         data: [125000, 62000, 41000, 29000, 28000],
         label: 'Superficie plantada',
         backgroundColor: '#5AA454',
+      },
+      {
+        data: [12500, 6200, 4100, 2900, 2800],
+        label: 'Superficie con riego',
+        backgroundColor: '#2720a4ff',
       }
     ]
   };
