@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CardValueComponent } from "../../components/card-porcentaje/card-porcentaje.component";
 import { CardPromedioComponent } from "../../components/card-promedio/card-promedio.component";
 import { Porcentaje } from '../../interfaces/porcentaje.interface';
+import { CardBarrasComponent } from "../../components/card-barras/card-barras.component";
 
 const datos: Porcentaje[] = [
   {
@@ -20,7 +21,7 @@ const datos: Porcentaje[] = [
 
 @Component({
   selector: 'app-data-page',
-  imports: [CardValueComponent, CardPromedioComponent],
+  imports: [CardValueComponent, CardPromedioComponent, CardBarrasComponent],
   templateUrl: './data-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './data-page.component.css'

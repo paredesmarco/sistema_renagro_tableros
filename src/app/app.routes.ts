@@ -30,7 +30,8 @@ export const routes: Routes = [
         path: 'home',
         loadComponent: () =>
           // import('./business/home/home.component').then((m) => m.HomeComponent),
-          import('./business/dashboard-z1/pages/map-page/map-page.component').then((m) => m.MapPageComponent),
+          // import('./business/dashboard-z1/pages/map-page/map-page.component').then((m) => m.MapPageComponent),
+          import('./business/dashboard-z1/pages/data-page/data-page.component').then((m) => m.DataPageComponent),
       },
       {
         path: 'map',
