@@ -16,6 +16,9 @@ ng serve
 npm install leaflet
 
 npm install --save-dev @types/leaflet
+
+npm install ng2-charts chart.js --save
+
 ```
 
 
