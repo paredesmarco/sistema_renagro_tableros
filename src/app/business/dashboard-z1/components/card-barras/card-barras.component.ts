@@ -15,6 +15,7 @@ Chart.register(...registerables);
 export class CardBarrasComponent implements OnInit {
   datos = input.required<DashboardData[]>();
   indId = input.required<string>();
+  color = input<string>('#8268a7');
   tituloX = input<string>('Cultivos');
   tituloY = input<string>('Hectáreas');
 
@@ -29,7 +30,7 @@ export class CardBarrasComponent implements OnInit {
         {
           data: this.valores(),
           label: this.titulo(),
-          backgroundColor: '#5AA454',
+          backgroundColor: this.color(),
         },
       ],
     };
