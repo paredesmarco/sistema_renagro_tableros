@@ -1,26 +1,56 @@
-<div class="card-container">
-    @for (valor of valores(); track valor.titulo) {
-    <app-card-promedio [dato]="valor"></app-card-promedio>
-    }
-</div>
+<div class="main-container">
+    <h2>Dashboard de Datos</h2>
 
-<table mat-table [dataSource]="consolidatedData()">
+    <div class="grid-container">
+        <!-- Sección Izquierda (70%) -->
+        <div class="left-section">
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title>Datos</mat-card-title>
+                </mat-card-header>
+                <div class="card-grid">
+                    <app-card-barras class="chart-card" [datos]="dashboardValor()" indId="forestal_sup">
+                    </app-card-barras>
+                </div>
 
-    <ng-container matColumnDef="indNombre">
-        <th mat-header-cell *matHeaderCellDef> Indicador </th>
-        <td mat-cell *matCellDef="let element"> {{element.indNombre}} </td>
-    </ng-container>
+                <div class="card-container">
+                    <mat-card-content>
+                        @for (valor of valores(); track valor.titulo) {
+                        <app-card-promedio [dato]="valor"></app-card-promedio>
+                        }
+                    </mat-card-content>
+                </div>
+            </mat-card>
 
-    <ng-container matColumnDef="valor">
-        <th mat-header-cell *matHeaderCellDef> Valor </th>
-        <td mat-cell *matCellDef="let element"> {{element.valor}} </td>
-    </ng-container>
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title>Datos de Superficie</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <app-card-tabla indTipo="superficie"></app-card-tabla>
+                </mat-card-content>
+            </mat-card>
+        </div>
 
-    <tr mat-header-row *matHeaderRowDef="['indNombre', 'valor']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['indNombre', 'valor'];"></tr>
-</table>
+        <!-- Sección Derecha (30%) -->
+        <div class="right-section">
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title>Datos Pecuarios</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <app-card-tabla indTipo="valor"></app-card-tabla>
+                </mat-card-content>
+            </mat-card>
 
-<div class="card-grid">
-    <app-card-barras class="chart-card" [datos]="dashboardValor()" indId="forestal_sup">
-    </app-card-barras>
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title>Resumen de Superficie</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <p>Aquí se podría mostrar un resumen o un gráfico para los datos de superficie.</p>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
 </div>

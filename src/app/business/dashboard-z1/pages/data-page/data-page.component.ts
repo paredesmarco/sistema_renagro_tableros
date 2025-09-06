@@ -7,6 +7,8 @@ import { CardValor } from '../../interfaces/card-valor.interface';
 import { DataService } from '../../services/data-service';
 import { MatTable, MatTableModule } from "@angular/material/table";
 import { DashboardData } from '../../interfaces/dashboard.interface';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent } from "@angular/material/card";
+import { CardTablaComponent } from "../../components/card-tabla/card-tabla.component";
 
 const datos: Porcentaje[] = [
   {
@@ -25,7 +27,7 @@ const datos: Porcentaje[] = [
 
 @Component({
   selector: 'app-data-page',
-  imports: [CardPromedioComponent, CardBarrasComponent, MatTableModule],
+  imports: [CardPromedioComponent, CardBarrasComponent, MatTableModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, CardTablaComponent],
   templateUrl: './data-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './data-page.component.css'

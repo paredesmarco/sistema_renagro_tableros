@@ -1,1 +1,15 @@
-<p>card-tabla works!</p>,
+<table mat-table [dataSource]="filteredData()">
+
+    <ng-container matColumnDef="indNombre">
+        <th mat-header-cell *matHeaderCellDef> Indicador </th>
+        <td mat-cell *matCellDef="let element"> {{element.indNombre}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="valValor">
+        <th mat-header-cell *matHeaderCellDef> Valor </th>
+        <td mat-cell *matCellDef="let element"> {{element.valValor}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
