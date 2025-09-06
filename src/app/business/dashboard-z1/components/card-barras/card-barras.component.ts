@@ -1,4 +1,4 @@
-import { Component, input, OnInit, signal } from '@angular/core';
+import { Component, input, OnInit, signal, computed } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType, Chart, registerables } from 'chart.js';
 import { DashboardData } from '../../interfaces/dashboard.interface';
@@ -7,75 +7,84 @@ Chart.register(...registerables);
 
 @Component({
   selector: 'app-card-barras',
+  standalone: true, // Agrega esta línea si no lo está
   imports: [BaseChartDirective],
   templateUrl: './card-barras.component.html',
   styleUrl: './card-barras.component.css',
 })
-
 export class CardBarrasComponent implements OnInit {
   datos = input.required<DashboardData[]>();
   indId = input.required<string>();
   tituloX = input<string>('Cultivos');
   tituloY = input<string>('Hectáreas');
 
-  titulo = signal<string>("");
+  titulo = signal<string>('');
   etiquetas = signal<string[]>([]);
   valores = signal<number[]>([]);
 
-  public barChartData: ChartConfiguration['data'] = {
-    labels: this.etiquetas(),
-    datasets: [
-      {
-        data: this.valores(),
-        label: this.titulo(),
-        backgroundColor: '#5AA454',
-      }
-    ]
-  };
+  public barChartData = computed<ChartConfiguration['data']>(() => {
+    return {
+      labels: this.etiquetas(),
+      datasets: [
+        {
+          data: this.valores(),
+          label: this.titulo(),
+          backgroundColor: '#5AA454',
+        },
+      ],
+    };
+  });
 
-  public barChartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    maintainAspectRatio: false, // Permite ajustar el tamaño del canvas
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: this.tituloX(),
-          font: { size: 12 } // Fuente más pequeña
+  public barChartOptions = computed<ChartConfiguration['options']>(() => {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: this.tituloX(),
+            font: { size: 12 },
+          },
+          ticks: { font: { size: 10 } },
         },
-        ticks: { font: { size: 10 } } // Tamaño de etiquetas más pequeño
+        y: {
+          title: {
+            display: true,
+            text: this.tituloY(),
+            font: { size: 12 },
+          },
+          ticks: { font: { size: 10 } },
+        },
       },
-      y: {
-        title: {
-          display: true,
-          text: this.tituloY(),
-          font: { size: 12 } // Fuente más pequeña
-        },
-        ticks: { font: { size: 10 } } // Tamaño de etiquetas más pequeño
-      }
-    }
-  };
+    };
+  });
 
   public barChartType: ChartType = 'bar';
 
-  constructor() { }
+  constructor() {
+    // this.datos.subscribe(() => this.processData());
+  }
 
   ngOnInit(): void {
-    console.log('ngOnInit');
-    let filteredData = this.datos().filter(item => item.indId === this.indId());
+    this.processData();
+  }
+
+  private processData(): void {
+    console.log('Procesando datos');
+    const filteredData = this.datos().filter((item) => item.indId === this.indId());
 
     const consolidatedMap = new Map<string, number>();
-    filteredData.forEach(item => {
-      this.titulo.set(item.indNombre);
-      const category = item.valCategoria ?? "-Categoria No Definida-";
+    let chartTitle = '';
+    filteredData.forEach((item) => {
+      if (!chartTitle) {
+        chartTitle = item.indNombre;
+      }
+      const category = item.valCategoria ?? '-Categoria No Definida-';
       const value = parseFloat(item.valValor) || 0;
 
-      if (consolidatedMap.has(category)) {
-        const currentValue = consolidatedMap.get(category) || 0;
-        consolidatedMap.set(category, currentValue + value);
-      } else {
-        consolidatedMap.set(category, value);
-      }
+      const currentValue = consolidatedMap.get(category) || 0;
+      consolidatedMap.set(category, currentValue + value);
     });
 
     const categories: string[] = [];
@@ -84,10 +93,13 @@ export class CardBarrasComponent implements OnInit {
       categories.push(category);
       values.push(value);
     });
+
+    // Actualiza las señales
+    this.titulo.set(chartTitle);
     this.etiquetas.set(categories);
     this.valores.set(values);
-    console.log('categories');
-    console.log(categories);
-    console.log(values);
+
+    console.log('categories:', this.etiquetas());
+    console.log('values:', this.valores());
   }
 }
