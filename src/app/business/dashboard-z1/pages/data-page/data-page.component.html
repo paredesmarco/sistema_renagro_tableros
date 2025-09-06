@@ -3,6 +3,23 @@
     <app-card-promedio [dato]="valor"></app-card-promedio>
     }
 </div>
+
+<table mat-table [dataSource]="consolidatedData()">
+
+    <ng-container matColumnDef="indNombre">
+        <th mat-header-cell *matHeaderCellDef> Indicador </th>
+        <td mat-cell *matCellDef="let element"> {{element.indNombre}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="valor">
+        <th mat-header-cell *matHeaderCellDef> Valor </th>
+        <td mat-cell *matCellDef="let element"> {{element.valor}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['indNombre', 'valor']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['indNombre', 'valor'];"></tr>
+</table>
+
 <div class="card-grid">
     <app-card-barras class="chart-card">
     </app-card-barras>

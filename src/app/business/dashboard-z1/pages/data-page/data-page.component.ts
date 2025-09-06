@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CardValueComponent } from "../../components/card-porcentaje/card-porcentaje.component";
 import { CardPromedioComponent } from "../../components/card-promedio/card-promedio.component";
 import { Porcentaje } from '../../interfaces/porcentaje.interface';
 import { CardBarrasComponent } from "../../components/card-barras/card-barras.component";
+import { CardValor } from '../../interfaces/card-valor.interface';
+import { DataService } from '../../services/data-service';
+import { MatTable, MatTableModule } from "@angular/material/table";
 
 const datos: Porcentaje[] = [
   {
@@ -21,11 +24,21 @@ const datos: Porcentaje[] = [
 
 @Component({
   selector: 'app-data-page',
-  imports: [CardValueComponent, CardPromedioComponent, CardBarrasComponent],
+  imports: [CardPromedioComponent, CardBarrasComponent, MatTableModule],
   templateUrl: './data-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './data-page.component.css'
 })
-export class DataPageComponent {
+
+export default class DataPageComponent implements OnInit {
   valores = signal(datos);
+  consolidatedData = signal<CardValor[]>([]);
+  constructor(private dataService: DataService) { }
+
+  ngOnInit(): void {
+    this.dataService.getConsolidatedData('16').subscribe(data => {
+      this.consolidatedData.set(data);
+      console.log('Datos consolidados:', this.consolidatedData());
+    });
+  }
 }

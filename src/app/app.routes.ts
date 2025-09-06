@@ -31,7 +31,7 @@ export const routes: Routes = [
         loadComponent: () =>
           // import('./business/home/home.component').then((m) => m.HomeComponent),
           // import('./business/dashboard-z1/pages/map-page/map-page.component').then((m) => m.MapPageComponent),
-          import('./business/dashboard-z1/pages/data-page/data-page.component').then((m) => m.DataPageComponent),
+          import('./business/dashboard-z1/pages/data-page/data-page.component'),//.then((m) => m.DataPageComponent),
       },
       {
         path: 'map',
@@ -41,7 +41,7 @@ export const routes: Routes = [
       {
         path: 'data',
         loadComponent: () =>
-          import('./business/dashboard-z1/pages/data-page/data-page.component').then((m) => m.DataPageComponent),
+          import('./business/dashboard-z1/pages/data-page/data-page.component'),
       },
       {
         path: 'usuarios',
