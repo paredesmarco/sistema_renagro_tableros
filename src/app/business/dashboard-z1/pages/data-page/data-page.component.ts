@@ -6,6 +6,7 @@ import { CardBarrasComponent } from "../../components/card-barras/card-barras.co
 import { CardValor } from '../../interfaces/card-valor.interface';
 import { DataService } from '../../services/data-service';
 import { MatTable, MatTableModule } from "@angular/material/table";
+import { DashboardData } from '../../interfaces/dashboard.interface';
 
 const datos: Porcentaje[] = [
   {
@@ -33,12 +34,18 @@ const datos: Porcentaje[] = [
 export default class DataPageComponent implements OnInit {
   valores = signal(datos);
   consolidatedData = signal<CardValor[]>([]);
+  dashboardValor = signal<DashboardData[]>([]);
+
   constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
+    // this.dataService.getData().subscribe(data => {
+    //   this.dashboardValor.set(data);
+    // });
+    this.dashboardValor.set(this.dataService.data());
+
     this.dataService.getConsolidatedData('16').subscribe(data => {
       this.consolidatedData.set(data);
-      console.log('Datos consolidados:', this.consolidatedData());
     });
   }
 }

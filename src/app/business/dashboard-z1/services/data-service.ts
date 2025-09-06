@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { DashboardData } from '../interfaces/dashboard.interface';
@@ -11,8 +11,17 @@ export class DataService {
 
   private dataUrl = 'http://localhost:3000/api/consulta';
   private http = inject(HttpClient);
+  data = signal<DashboardData[]>([]);
 
-  constructor() { }
+
+  constructor() {
+    console.log('DataService.constructor');
+    this.http.get<DashboardData[]>(this.dataUrl).subscribe(data => {
+      this.data.set(data);
+      console.log('DataService.constructor.data');
+      console.log(this.data());
+    });
+  }
 
   /**
    * Carga y procesa los datos de la URL de la API.
