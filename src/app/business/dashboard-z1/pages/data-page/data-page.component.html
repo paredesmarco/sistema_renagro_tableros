@@ -1,56 +1,31 @@
 <div class="main-container">
-    <h2>Dashboard de Datos</h2>
-
-    <div class="grid-container">
-        <!-- Sección Izquierda (70%) -->
-        <div class="left-section">
-            <mat-card class="dashboard-card">
-                <mat-card-header>
-                    <mat-card-title>Datos</mat-card-title>
-                </mat-card-header>
-                <div class="card-grid">
-                    <app-card-barras class="chart-card" [datos]="dashboardValor()" indId="forestal_sup">
-                    </app-card-barras>
-                </div>
-
-                <div class="card-container">
-                    <mat-card-content>
-                        @for (valor of valores(); track valor.titulo) {
-                        <app-card-promedio [dato]="valor"></app-card-promedio>
-                        }
-                    </mat-card-content>
-                </div>
-            </mat-card>
-
-            <mat-card class="dashboard-card">
-                <mat-card-header>
-                    <mat-card-title>Datos de Superficie</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <app-card-tabla indTipo="superficie"></app-card-tabla>
-                </mat-card-content>
-            </mat-card>
+    <mat-card class="left-section">
+        <div class="barras-section">
+            <app-card-barras class="chart-card" [datos]="dashboardValor()" indId="forestal_sup">
+            </app-card-barras>
+            <app-card-barras class="chart-card" [datos]="dashboardValor()" indId="cultivo_plantado">
+            </app-card-barras>
+            <app-card-barras class="chart-card" [datos]="dashboardValor()" indId="cultivo_riego">
+            </app-card-barras>
         </div>
 
-        <!-- Sección Derecha (30%) -->
-        <div class="right-section">
-            <mat-card class="dashboard-card">
-                <mat-card-header>
-                    <mat-card-title>Datos Pecuarios</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <app-card-tabla indTipo="valor"></app-card-tabla>
-                </mat-card-content>
-            </mat-card>
-
-            <mat-card class="dashboard-card">
-                <mat-card-header>
-                    <mat-card-title>Resumen de Superficie</mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <p>Aquí se podría mostrar un resumen o un gráfico para los datos de superficie.</p>
-                </mat-card-content>
-            </mat-card>
+        <div class="card-section">
+            @for (valor of valores(); track valor.titulo) {
+            <app-card-promedio [dato]="valor"></app-card-promedio>
+            }
         </div>
+    </mat-card>
+
+    <div class="right-section">
+        <app-card-tabla indTipo="valor"></app-card-tabla>
+
+        <mat-card class="dashboard-card">
+            <mat-card-header>
+                <mat-card-title>Resumen de Superficie</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>Aquí se podría mostrar un resumen o un gráfico para los datos de superficie.</p>
+            </mat-card-content>
+        </mat-card>
     </div>
 </div>
