@@ -15,9 +15,9 @@ export class CardTablaComponent {
   indOrigen = input.required<string[]>();
   titulo = input.required<string>();
 
-  displayedColumns: string[] = ['indNombre', 'valValor'];
+  displayedColumns: string[] = ['indNombre', 'valor'];
 
   filteredData = computed(() => {
-    return this.dataService.totalIndices().filter(item => this.indOrigen().includes(item.indNombre));
+    return this.dataService.totalIndices().filter(item => this.indOrigen().includes(item.indId));
   });
 }

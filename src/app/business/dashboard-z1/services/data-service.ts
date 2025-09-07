@@ -28,36 +28,44 @@ export class DataService {
       if (provincia && item.provinciaDpa === provincia) {
         matches = true;
       }
-      if (matches && canton && item.cantonDpa === canton) {
+      if (canton && item.cantonDpa === canton) {
         matches = true;
       }
-      if (matches && parroquia && item.provinciaDpa === parroquia) {
+      if (parroquia && item.parroquiaDpa === parroquia) {
         matches = true;
       }
       return matches;
     });
 
-    // Totaliza los valores por cada indId en un Map
+    // Totaliza los valores por cada indId y almacena el nombre
     const totalsMap = new Map<string, number>();
+    const namesMap = new Map<string, string>();
+
     filteredData.forEach(item => {
       const indId = item.indId;
       const value = parseFloat(item.valValor) || 0;
       const currentValue = totalsMap.get(indId) || 0;
       totalsMap.set(indId, currentValue + value);
+
+      // Almacena el nombre del indicador
+      if (!namesMap.has(indId)) {
+        namesMap.set(indId, item.indNombre);
+      }
     });
 
-    // Convierte el Map en un array de objetos
-    const totalsArray = Array.from(totalsMap, ([indId, total]) => ({ indNombre: indId, valValor: total }));
-    // console.log('totalsArray');
-    // console.log(totalsArray);
+    // Convierte los Maps en un array de objetos con el formato de la interfaz
+    const totalsArray = Array.from(totalsMap, ([indId, valor]) => ({
+      indId: indId,
+      indNombre: namesMap.get(indId) || '',
+      valor: valor
+    }));
+
     return totalsArray;
   });
 
   constructor() {
     this.http.get<DashboardData[]>(this.dataUrl).subscribe(data => {
       this.data.set(data);
-      // console.log('DataService.constructor.data');
-      // console.log(this.data());
     });
   }
 }
