@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
-import { DashboardData } from '../../interfaces/dashboard.interface';
 import { DataService } from '../../services/data-service';
 
 @Component({
@@ -13,11 +12,12 @@ import { DataService } from '../../services/data-service';
 })
 export class CardTablaComponent {
   dataService = inject(DataService);
-  indTipo = input.required<string>();
+  indOrigen = input.required<string[]>();
+  titulo = input.required<string>();
 
   displayedColumns: string[] = ['indNombre', 'valValor'];
 
   filteredData = computed(() => {
-    return this.dataService.data().filter(item => item.indTipo === this.indTipo());
+    return this.dataService.totalIndices().filter(item => this.indOrigen().includes(item.indNombre));
   });
 }

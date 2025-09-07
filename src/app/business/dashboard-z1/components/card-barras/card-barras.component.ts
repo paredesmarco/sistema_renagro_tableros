@@ -72,7 +72,7 @@ export class CardBarrasComponent implements OnInit {
   }
 
   private processData(): void {
-    console.log('Procesando datos');
+    // console.log('Procesando datos');
     const filteredData = this.datos().filter((item) => item.indId === this.indId());
 
     const consolidatedMap = new Map<string, number>();
@@ -100,7 +100,7 @@ export class CardBarrasComponent implements OnInit {
     this.etiquetas.set(categories);
     this.valores.set(values);
 
-    console.log('categories:', this.etiquetas());
-    console.log('values:', this.valores());
+    // console.log('categories:', this.etiquetas());
+    // console.log('values:', this.valores());
   }
 }

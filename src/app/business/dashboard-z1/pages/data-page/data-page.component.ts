@@ -46,8 +46,8 @@ export default class DataPageComponent implements OnInit {
     // });
     this.dashboardValor.set(this.dataService.data());
 
-    this.dataService.getConsolidatedData('16').subscribe(data => {
-      this.consolidatedData.set(data);
-    });
+    // this.dataService.data().subscribe(data => {
+    //   this.consolidatedData.set(data);
+    // });
   }
 }

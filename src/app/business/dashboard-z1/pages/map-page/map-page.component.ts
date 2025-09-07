@@ -60,7 +60,7 @@ const datos: Valor[] = [
 
 @Component({
   selector: 'app-map-page',
-  imports: [MapViewComponent, MatCard, CardValueComponent],
+  imports: [MapViewComponent, CardValueComponent],
   templateUrl: './map-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './map-page.component.css'
