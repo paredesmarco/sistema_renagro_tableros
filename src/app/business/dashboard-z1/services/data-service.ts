@@ -16,8 +16,7 @@ export class DataService {
   cantonDpa = signal<string>('');
   parroquiaDpa = signal<string>('');
 
-  //señal computada para los datos filtrados
-  filteredData = computed<DashboardData[]>(() => {
+  filterData = computed<DashboardData[]>(() => {
     const allData = this.data();
     const provincia = this.provinciaDpa();
     const canton = this.cantonDpa();
@@ -38,11 +37,8 @@ export class DataService {
     });
   });
 
-  // totaliza los valores por cada indId
   totalIndices = computed<CardValor[]>(() => {
-    const dataToProcess = this.filteredData();
-
-    // Totaliza los valores por cada indId y almacena el nombre
+    const dataToProcess = this.filterData();
     const totalsMap = new Map<string, number>();
     const namesMap = new Map<string, string>();
 
@@ -52,13 +48,11 @@ export class DataService {
       const currentValue = totalsMap.get(indId) || 0;
       totalsMap.set(indId, currentValue + value);
 
-      // Almacena el nombre del indicador
       if (!namesMap.has(indId)) {
         namesMap.set(indId, item.indNombre);
       }
     });
 
-    // Convierte los Maps en un array de objetos con el formato de la interfaz
     const totalsArray = Array.from(totalsMap, ([indId, valor]) => ({
       indId: indId,
       indNombre: namesMap.get(indId) || '',
@@ -68,9 +62,9 @@ export class DataService {
     return totalsArray;
   });
 
-  // Consolidar por categoría
+  // El tipo de retorno está explícitamente definido aquí
   getConsolidatedDataByIndId(indId: string): { labels: string[], values: number[], title: string } {
-    const filteredByDpa = this.filteredData();
+    const filteredByDpa = this.filterData();
     const filteredData = filteredByDpa.filter(item => item.indId === indId);
 
     const consolidatedMap = new Map<string, number>();

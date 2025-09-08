@@ -1,23 +1,25 @@
-import { Component, input, OnInit, signal, computed } from '@angular/core';
+import { Component, input, signal, computed, inject, effect } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType, Chart, registerables } from 'chart.js';
-import { DashboardData } from '../../interfaces/dashboard.interface';
+import { DataService } from '../../services/data-service';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-card-barras',
-  standalone: true, // Agrega esta línea si no lo está
+  standalone: true,
   imports: [BaseChartDirective],
   templateUrl: './card-barras.component.html',
   styleUrl: './card-barras.component.css',
 })
-export class CardBarrasComponent implements OnInit {
-  datos = input.required<DashboardData[]>();
+
+export class CardBarrasComponent {
   indId = input.required<string>();
   color = input<string>('#8268a7');
   tituloX = input<string>('Cultivos');
   tituloY = input<string>('Hectáreas');
+
+  private dataService = inject(DataService);
 
   titulo = signal<string>('');
   etiquetas = signal<string[]>([]);
@@ -63,44 +65,22 @@ export class CardBarrasComponent implements OnInit {
 
   public barChartType: ChartType = 'bar';
 
+  // Usamos effect() para reaccionar a los cambios en el servicio
   constructor() {
-    // this.datos.subscribe(() => this.processData());
-  }
+    effect(() => {
+      // Al llamar a la señal aquí, el 'effect' se activará
+      // cada vez que la señal 'filterData' cambie de valor.
+      this.dataService.filterData();
 
-  ngOnInit(): void {
-    this.processData();
+      // Llamamos al método que procesa los datos para actualizar el componente
+      this.processData();
+    });
   }
 
   private processData(): void {
-    // console.log('Procesando datos');
-    const filteredData = this.datos().filter((item) => item.indId === this.indId());
-
-    const consolidatedMap = new Map<string, number>();
-    let chartTitle = '';
-    filteredData.forEach((item) => {
-      if (!chartTitle) {
-        chartTitle = item.indNombre;
-      }
-      const category = item.valCategoria ?? '-Categoria No Definida-';
-      const value = parseFloat(item.valValor) || 0;
-
-      const currentValue = consolidatedMap.get(category) || 0;
-      consolidatedMap.set(category, currentValue + value);
-    });
-
-    const categories: string[] = [];
-    const values: number[] = [];
-    consolidatedMap.forEach((value, category) => {
-      categories.push(category);
-      values.push(value);
-    });
-
-    // Actualiza las señales
-    this.titulo.set(chartTitle);
-    this.etiquetas.set(categories);
-    this.valores.set(values);
-
-    // console.log('categories:', this.etiquetas());
-    // console.log('values:', this.valores());
+    const consolidatedData = this.dataService.getConsolidatedDataByIndId(this.indId());
+    this.titulo.set(consolidatedData.title);
+    this.etiquetas.set(consolidatedData.labels);
+    this.valores.set(consolidatedData.values);
   }
 }
