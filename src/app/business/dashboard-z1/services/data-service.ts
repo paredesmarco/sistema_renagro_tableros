@@ -1,6 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DashboardData } from '../interfaces/dashboard.interface';
+import { DashboardData } from '../interfaces/dashboard-valor.interface';
 import { CardValor } from '../interfaces/card-valor.interface';
 
 @Injectable({
@@ -11,11 +11,11 @@ export class DataService {
   private dataUrl = 'http://localhost:3000/api/consulta';
   private http = inject(HttpClient);
 
-  data = signal<DashboardData[]>([]);
   provinciaDpa = signal<string>('16');
   cantonDpa = signal<string>('');
   parroquiaDpa = signal<string>('');
 
+  data = signal<DashboardData[]>([]);
   filterData = computed<DashboardData[]>(() => {
     const allData = this.data();
     const provincia = this.provinciaDpa();
