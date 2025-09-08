@@ -6,7 +6,7 @@ import { CardBarrasComponent } from "../../components/card-barras/card-barras.co
 import { CardValor } from '../../interfaces/card-valor.interface';
 import { DataService } from '../../services/data-service';
 import { MatTable, MatTableModule } from "@angular/material/table";
-import { DashboardData } from '../../interfaces/dashboard-valor.interface';
+import { DashboardValor } from '../../interfaces/dashboard-valor.interface';
 import { MatCard, MatCardHeader, MatCardTitle, MatCardContent } from "@angular/material/card";
 import { CardTablaComponent } from "../../components/card-tabla/card-tabla.component";
 
@@ -36,7 +36,7 @@ const datos: Porcentaje[] = [
 export default class DataPageComponent implements OnInit {
   valores = signal(datos);
   consolidatedData = signal<CardValor[]>([]);
-  dashboardValor = signal<DashboardData[]>([]);
+  dashboardValor = signal<DashboardValor[]>([]);
 
   constructor(private dataService: DataService) { }
 

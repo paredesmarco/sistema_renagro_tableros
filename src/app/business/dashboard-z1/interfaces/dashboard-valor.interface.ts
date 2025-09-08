@@ -1,4 +1,4 @@
-export interface DashboardData {
+export interface DashboardValor {
   valParroquia: string;
   indId: string;
   valValor: string;
