@@ -16,15 +16,15 @@ export class DataService {
   cantonDpa = signal<string>('');
   parroquiaDpa = signal<string>('');
 
-  // totaliza los valores por cada indId
-  totalIndices = computed<CardValor[]>(() => {
+
+  // Método privado para filtrar los datos por provincia, cantón y parroquia
+  private _filterDataByDpa(): DashboardData[] {
     const allData = this.data();
     const provincia = this.provinciaDpa();
     const canton = this.cantonDpa();
     const parroquia = this.parroquiaDpa();
 
-    // Filtra los datos por provincia, cantón y parroquia
-    const filteredData = allData.filter(item => {
+    return allData.filter(item => {
       let matches = false;
       if (provincia && item.provinciaDpa === provincia) {
         matches = true;
@@ -37,6 +37,11 @@ export class DataService {
       }
       return matches;
     });
+  }
+
+  // totaliza los valores por cada indId
+  totalIndices = computed<CardValor[]>(() => {
+    const filteredData = this._filterDataByDpa();
 
     // Totaliza los valores por cada indId y almacena el nombre
     const totalsMap = new Map<string, number>();
@@ -63,6 +68,40 @@ export class DataService {
 
     return totalsArray;
   });
+
+
+  // Nuevo método para consolidar por categoría
+  getConsolidatedDataByIndId(indId: string): { labels: string[], values: number[], title: string } {
+    let filteredData = this._filterDataByDpa();
+    filteredData = filteredData.filter(item => item.indId === indId);
+
+    const consolidatedMap = new Map<string, number>();
+    let chartTitle = '';
+
+    filteredData.forEach((item) => {
+      if (!chartTitle) {
+        chartTitle = item.indNombre;
+      }
+      const category = item.valCategoria ?? '-Categoria No Definida-';
+      const value = parseFloat(item.valValor) || 0;
+
+      const currentValue = consolidatedMap.get(category) || 0;
+      consolidatedMap.set(category, currentValue + value);
+    });
+
+    const categories: string[] = [];
+    const values: number[] = [];
+    consolidatedMap.forEach((value, category) => {
+      categories.push(category);
+      values.push(value);
+    });
+
+    return {
+      labels: categories,
+      values: values,
+      title: chartTitle
+    };
+  }
 
   constructor() {
     this.http.get<DashboardData[]>(this.dataUrl).subscribe(data => {
