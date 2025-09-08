@@ -16,9 +16,8 @@ export class DataService {
   cantonDpa = signal<string>('');
   parroquiaDpa = signal<string>('');
 
-
-  // Método privado para filtrar los datos por provincia, cantón y parroquia
-  private _filterDataByDpa(): DashboardData[] {
+  //señal computada para los datos filtrados
+  filteredData = computed<DashboardData[]>(() => {
     const allData = this.data();
     const provincia = this.provinciaDpa();
     const canton = this.cantonDpa();
@@ -37,17 +36,17 @@ export class DataService {
       }
       return matches;
     });
-  }
+  });
 
   // totaliza los valores por cada indId
   totalIndices = computed<CardValor[]>(() => {
-    const filteredData = this._filterDataByDpa();
+    const dataToProcess = this.filteredData();
 
     // Totaliza los valores por cada indId y almacena el nombre
     const totalsMap = new Map<string, number>();
     const namesMap = new Map<string, string>();
 
-    filteredData.forEach(item => {
+    dataToProcess.forEach(item => {
       const indId = item.indId;
       const value = parseFloat(item.valValor) || 0;
       const currentValue = totalsMap.get(indId) || 0;
@@ -69,11 +68,10 @@ export class DataService {
     return totalsArray;
   });
 
-
-  // Nuevo método para consolidar por categoría
+  // Consolidar por categoría
   getConsolidatedDataByIndId(indId: string): { labels: string[], values: number[], title: string } {
-    let filteredData = this._filterDataByDpa();
-    filteredData = filteredData.filter(item => item.indId === indId);
+    const filteredByDpa = this.filteredData();
+    const filteredData = filteredByDpa.filter(item => item.indId === indId);
 
     const consolidatedMap = new Map<string, number>();
     let chartTitle = '';
