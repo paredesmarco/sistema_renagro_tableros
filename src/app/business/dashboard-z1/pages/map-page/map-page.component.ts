@@ -3,56 +3,48 @@ import { MapViewComponent } from "../../components/map-view/map-view.component";
 import { Valor } from '../../interfaces/valor.interface';
 import { CardValueComponent } from "../../components/card-porcentaje/card-porcentaje.component";
 import { DataService } from '../../services/data-service';
+import { CardPorcentaje } from '../../interfaces/card-porcentaje.interface';
 
-const datos: Valor[] = [
+const datos: CardPorcentaje[] = [
   {
-    titulo: "UPAs registradas",
-    planificado: 200,
-    ejecutado: 120
-  },
-
-  {
-    titulo: "Personas productoras registradas",
+    indId: "UPAs registradas",
+    indNombre: "UPAs registradas",
     planificado: 200,
     ejecutado: 120
   },
   {
-    titulo: "Provincias registradas",
+    indId: "Personas productoras registradas",
+    indNombre: "Personas productoras registradas",
     planificado: 200,
     ejecutado: 120
   },
   {
-    titulo: "Cantones registrados",
-    planificado: 200,
-    ejecutado: 120
-  },
-  {
-    titulo: "Parroquias registradas",
-    planificado: 200,
-    ejecutado: 120
-  },
-  {
-    titulo: "Poligonos de levantamiento registrados",
+    indId: "Poligonos de levantamiento registrados",
+    indNombre: "Poligonos de levantamiento registrados",
     planificado: 200,
     ejecutado: 140
   },
   {
-    titulo: "Superficie de cobertura de territorio registrado (ha)",
+    indId: "Superficie de cobertura de territorio registrado (ha)",
+    indNombre: "Superficie de cobertura de territorio registrado (ha)",
     planificado: 200,
     ejecutado: 140
   },
   {
-    titulo: "Superficie agroprecuaria registrada",
+    indId: "Superficie agroprecuaria registrada",
+    indNombre: "Superficie agroprecuaria registrada",
     planificado: 200,
     ejecutado: 140
   },
   {
-    titulo: "Superficie forestal registrada",
+    indId: "Superficie forestal registrada",
+    indNombre: "Superficie forestal registrada",
     planificado: 200,
     ejecutado: 140
   },
   {
-    titulo: "Boletas RENAGRO no UPAs",
+    indId: "Boletas RENAGRO no UPAs",
+    indNombre: "Boletas RENAGRO no UPAs",
     planificado: 200,
     ejecutado: 140
   }
@@ -68,5 +60,5 @@ const datos: Valor[] = [
 export class MapPageComponent {
   private dataService = inject(DataService);
   valores = this.dataService.totalesPorcentajes;
-  // valores = signal(datos);
+  otros = signal(datos);
 }

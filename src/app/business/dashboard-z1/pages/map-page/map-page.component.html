@@ -5,4 +5,7 @@
     @for (valor of valores(); track valor.indId) {
     <app-card-porcentaje [dato]="valor"></app-card-porcentaje>
     }
+    @for (valor of otros(); track valor.indId) {
+    <app-card-porcentaje [dato]="valor"></app-card-porcentaje>
+    }
 </div>

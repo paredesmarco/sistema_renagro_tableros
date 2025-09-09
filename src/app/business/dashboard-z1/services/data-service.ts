@@ -97,21 +97,21 @@ export class DataService {
         indNombre: this.indicadoresMap().get('provincias')?.indNombre || 'provincias',
         planificado: provinciasMeta.size,
         ejecutado: provinciasReal.size,
-        porcentaje: (provinciasReal.size / provinciasMeta.size) * 100
+        // porcentaje: (provinciasReal.size / provinciasMeta.size) * 100
       },
       {
         indId: 'cantones',
         indNombre: this.indicadoresMap().get('cantones')?.indNombre || 'cantones',
         planificado: cantonesMeta.size,
         ejecutado: cantonesReal.size,
-        porcentaje: (cantonesReal.size / cantonesMeta.size) * 100
+        // porcentaje: (cantonesReal.size / cantonesMeta.size) * 100
       },
       {
         indId: 'parroquias',
         indNombre: this.indicadoresMap().get('parroquias')?.indNombre || 'parroquias',
         planificado: parroquiasMeta.size,
         ejecutado: parroquiasReal.size,
-        porcentaje: (parroquiasReal.size / parroquiasMeta.size) * 100
+        // porcentaje: (parroquiasReal.size / parroquiasMeta.size) * 100
       }
     ];
 

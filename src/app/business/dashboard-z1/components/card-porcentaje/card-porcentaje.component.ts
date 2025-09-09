@@ -14,6 +14,11 @@ export class CardValueComponent {
   dato = input.required<CardPorcentaje>();
 
   porcentajeFormateado = computed(() => {
-    return parseFloat(this.dato().porcentaje).toFixed(0);
+    const ejecutado = this.dato().ejecutado;
+    const planificado = this.dato().planificado;
+    if (planificado === 0) {
+      return '0';
+    }
+    return ((ejecutado / planificado) * 100).toFixed(0);
   });
 }

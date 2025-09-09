@@ -1,7 +1,7 @@
 export interface CardPorcentaje {
     indId: string;
     indNombre: string;
-    planificado: any;
-    ejecutado: any;
-    porcentaje: any;
+    planificado: number;
+    ejecutado: number;
+    // porcentaje: any;
 }
