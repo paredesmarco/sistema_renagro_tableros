@@ -27,7 +27,7 @@ const datos: Porcentaje[] = [
 
 @Component({
   selector: 'app-data-page',
-  imports: [CardPromedioComponent, CardBarrasComponent, MatTableModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, CardTablaComponent],
+  imports: [CardPromedioComponent, CardBarrasComponent, MatTableModule, MatCard, CardTablaComponent],
   templateUrl: './data-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './data-page.component.css'

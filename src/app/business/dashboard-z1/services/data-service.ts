@@ -13,7 +13,7 @@ export class DataService {
   private dashboardUrlIndicadores = 'http://localhost:3000/api/indicadores';
   private http = inject(HttpClient);
 
-  provinciaDpa = signal<string>('16');
+  provinciaDpa = signal<string>('08');
   cantonDpa = signal<string>('');
   parroquiaDpa = signal<string>('');
 
