@@ -52,22 +52,14 @@ export class MapViewComponent implements AfterViewInit {
       return;
     }
 
-    const polygons = [
-      { dpa: '05', estado: 'o' },
-      { dpa: '08', estado: 'o' },
-      { dpa: '10', estado: 'o' },
-      { dpa: '12', estado: 'o' },
-      { dpa: '13', estado: 'err' },
-      { dpa: '17', estado: 'ok' },
-      { dpa: '21', estado: 'war' },
-      { dpa: '23', estado: 'o' }
-    ];
+    const polygons = this.dataService.lugaresProvincias();
+    // console.log(polygons);
 
     polygons.forEach(polygon => {
-      fetch(`assets/polygons/${polygon.dpa}.geojson`)
+      fetch(`assets/polygons/${polygon.parroquiaDpa}.geojson`)
         .then(response => {
           if (!response.ok) {
-            throw new Error(`No se pudo cargar el archivo GeoJSON: ${polygon.dpa}`);
+            throw new Error(`No se pudo cargar el archivo GeoJSON: ${polygon.parroquiaDpa}`);
           }
           return response.json();
         })
@@ -88,7 +80,7 @@ export class MapViewComponent implements AfterViewInit {
 
           // Agregamos el evento de click al polígono
           geoJsonLayer.on('click', (e) => {
-            const polygonCode = polygon.dpa;
+            const polygonCode = polygon.parroquiaDpa;
             console.log('Polígono seleccionado:', polygonCode);
             // Actualizamos la variable provinciaDpa en el servicio
             this.dataService.provinciaDpa.set(polygonCode);
@@ -96,7 +88,7 @@ export class MapViewComponent implements AfterViewInit {
 
         })
         .catch(error => {
-          console.error(`Error al cargar el polígono ${polygon.dpa}:`, error);
+          console.error(`Error al cargar el polígono ${polygon.parroquiaDpa}:`, error);
         });
     });
   }
