@@ -2,7 +2,7 @@
     <app-map-view></app-map-view>
 </div>
 <div class="card-container">
-    @for (valor of valores(); track valor.titulo) {
+    @for (valor of valores(); track valor.indId) {
     <app-card-porcentaje [dato]="valor"></app-card-porcentaje>
     }
 </div>

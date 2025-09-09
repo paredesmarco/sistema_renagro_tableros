@@ -4,6 +4,7 @@ import { DashboardValor } from '../interfaces/dashboard-valor.interface';
 import { CardValor } from '../interfaces/card-valor.interface';
 import { DashboardIndicador } from '../interfaces/dashboard-indicador.interface';
 import { DashboardLugar } from '../interfaces/dashboard-lugar.interface';
+import { CardPorcentaje } from '../interfaces/card-porcentaje.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,12 @@ export class DataService {
   indicadores = signal<DashboardIndicador[]>([]);
   lugares = signal<DashboardLugar[]>([]);
   data = signal<DashboardValor[]>([]);
+
+  private indicadoresMap = computed(() => {
+    const indicadorMap = new Map<string, DashboardIndicador>();
+    this.indicadores().forEach(ind => indicadorMap.set(ind.indId, ind));
+    return indicadorMap;
+  });
 
   filterData = computed<DashboardValor[]>(() => {
     const allData = this.data();
@@ -69,7 +76,49 @@ export class DataService {
     return totalsArray;
   });
 
-  // El tipo de retorno está explícitamente definido aquí
+  //totales del seguimiento
+  totalesPorcentajes = computed<CardPorcentaje[]>(() => {
+    const allLugares = this.lugares();
+    const allData = this.data();
+
+    const provinciasMeta = new Set(allLugares.filter(l => l.provinciaDpa.trim().length === 2).map(l => l.provinciaDpa));
+    const provinciasReal = new Set(allData.map(d => d.provinciaDpa));
+
+    const cantonesMeta = new Set(allLugares.filter(l => l.cantonDpa.trim().length === 4).map(l => l.cantonDpa));
+    const cantonesReal = new Set(allData.map(d => d.cantonDpa));
+
+    const parroquiasMeta = new Set(allLugares.filter(l => l.parroquiaDpa.trim().length === 6).map(l => l.parroquiaDpa));
+    const parroquiasReal = new Set(allData.map(d => d.parroquiaDpa));
+
+
+    const resultados: CardPorcentaje[] = [
+      {
+        indId: 'provincias',
+        indNombre: this.indicadoresMap().get('provincias')?.indNombre || 'provincias',
+        planificado: provinciasMeta.size,
+        ejecutado: provinciasReal.size,
+        porcentaje: (provinciasReal.size / provinciasMeta.size) * 100
+      },
+      {
+        indId: 'cantones',
+        indNombre: this.indicadoresMap().get('cantones')?.indNombre || 'cantones',
+        planificado: cantonesMeta.size,
+        ejecutado: cantonesReal.size,
+        porcentaje: (cantonesReal.size / cantonesMeta.size) * 100
+      },
+      {
+        indId: 'parroquias',
+        indNombre: this.indicadoresMap().get('parroquias')?.indNombre || 'parroquias',
+        planificado: parroquiasMeta.size,
+        ejecutado: parroquiasReal.size,
+        porcentaje: (parroquiasReal.size / parroquiasMeta.size) * 100
+      }
+    ];
+
+    return resultados;
+  });
+
+  // data para graficos de barras
   getConsolidatedDataByIndId(indId: string): { labels: string[], values: number[], title: string } {
     const filteredByDpa = this.filterData();
     const filteredData = filteredByDpa.filter(item => item.indId === indId);
@@ -131,7 +180,6 @@ export class DataService {
       countMap.set(provinciaDpa, currentCount + 1);
     });
 
-    // Agregar el campo 'estado' a los lugares de provincias
     return lugaresProvincias.map(lugar => {
       const count = countMap.get(lugar.provinciaDpa) || 0;
       let estado: string | null = 'nr';

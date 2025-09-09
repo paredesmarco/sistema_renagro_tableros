@@ -1,21 +1,21 @@
 <mat-card>
     <mat-card-header>
         <mat-card-title class="fixed-title">
-            {{ dato().titulo }}
+            {{ dato().indNombre }}
         </mat-card-title>
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content class="bottom-content-wrapper">
         <div class="left-section">
             <span class="percentage">
-                {{ (dato().ejecutado/dato().planificado * 100) }}%
+                {{ porcentajeFormateado()}}%
             </span>
         </div>
         <div class="right-section">
             <p>
-                <span><b>Planificados:</b> {{ dato().planificado }}</span>
+                <span><b>Planificado:</b> {{ dato().planificado }}</span>
                 <br>
-                <span><b>Ejecutados:</b> {{ dato().ejecutado }}</span>
+                <span><b>Ejecutado:</b> {{ dato().ejecutado }}</span>
             </p>
         </div>
     </mat-card-content>

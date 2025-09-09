@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MapViewComponent } from "../../components/map-view/map-view.component";
 import { Valor } from '../../interfaces/valor.interface';
-import { MatCard } from "@angular/material/card";
 import { CardValueComponent } from "../../components/card-porcentaje/card-porcentaje.component";
+import { DataService } from '../../services/data-service';
 
 const datos: Valor[] = [
   {
@@ -66,5 +66,7 @@ const datos: Valor[] = [
   styleUrl: './map-page.component.css'
 })
 export class MapPageComponent {
-  valores = signal(datos);
+  private dataService = inject(DataService);
+  valores = this.dataService.totalesPorcentajes;
+  // valores = signal(datos);
 }

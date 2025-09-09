@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { Valor } from '../../interfaces/valor.interface';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MatCard, MatCardTitle, MatCardHeader, MatCardContent } from "@angular/material/card";
 import { MatDivider } from "@angular/material/divider";
+import { CardPorcentaje } from '../../interfaces/card-porcentaje.interface';
 
 @Component({
   selector: 'app-card-porcentaje',
@@ -11,5 +11,9 @@ import { MatDivider } from "@angular/material/divider";
   styleUrl: './card-porcentaje.component.css'
 })
 export class CardValueComponent {
-  dato = input.required<Valor>();
+  dato = input.required<CardPorcentaje>();
+
+  porcentajeFormateado = computed(() => {
+    return parseFloat(this.dato().porcentaje).toFixed(0);
+  });
 }
