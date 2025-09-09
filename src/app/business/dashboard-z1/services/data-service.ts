@@ -2,6 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DashboardValor } from '../interfaces/dashboard-valor.interface';
 import { CardValor } from '../interfaces/card-valor.interface';
+import { DashboardIndicador } from '../interfaces/dashboard-indicador.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -9,12 +10,14 @@ import { CardValor } from '../interfaces/card-valor.interface';
 export class DataService {
 
   private dataUrl = 'http://localhost:3000/api/consulta';
+  private dashboardUrlIndicadores = 'http://localhost:3000/api/indicadores';
   private http = inject(HttpClient);
 
   provinciaDpa = signal<string>('16');
   cantonDpa = signal<string>('');
   parroquiaDpa = signal<string>('');
 
+  indicadores = signal<DashboardIndicador[]>([]);
   data = signal<DashboardValor[]>([]);
   filterData = computed<DashboardValor[]>(() => {
     const allData = this.data();
@@ -98,6 +101,10 @@ export class DataService {
   constructor() {
     this.http.get<DashboardValor[]>(this.dataUrl).subscribe(data => {
       this.data.set(data);
+    });
+    this.http.get<DashboardIndicador[]>(this.dashboardUrlIndicadores).subscribe(data => {
+      this.indicadores.set(data);
+      console.log(this.indicadores());
     });
   }
 }
