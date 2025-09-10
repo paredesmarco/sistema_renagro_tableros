@@ -5,6 +5,7 @@ import { CardValor } from '../interfaces/card-valor.interface';
 import { DashboardIndicador } from '../interfaces/dashboard-indicador.interface';
 import { DashboardLugar } from '../interfaces/dashboard-lugar.interface';
 import { CardPorcentaje } from '../interfaces/card-porcentaje.interface';
+import { DashboardMeta } from '../interfaces/dashboard-meta.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class DataService {
   private dataUrl = 'http://localhost:3000/api/consulta';
   private dashboardUrlIndicadores = 'http://localhost:3000/api/indicadores';
   private dashboardUrlLugares = 'http://localhost:3000/api/lugares';
+  private dashboardUrlMetas = 'http://localhost:3000/api/metas';
   private http = inject(HttpClient);
 
   provinciaDpa = signal<string>('08');
@@ -22,12 +24,47 @@ export class DataService {
 
   indicadores = signal<DashboardIndicador[]>([]);
   lugares = signal<DashboardLugar[]>([]);
+  metas = signal<DashboardMeta[]>([]);
   data = signal<DashboardValor[]>([]);
 
   private indicadoresMap = computed(() => {
     const indicadorMap = new Map<string, DashboardIndicador>();
     this.indicadores().forEach(ind => indicadorMap.set(ind.indId, ind));
     return indicadorMap;
+  });
+
+  filterLugares = computed<DashboardLugar[]>(() => {
+    const allLugares = this.lugares();
+    const provincia = this.provinciaDpa();
+    const canton = this.cantonDpa();
+    const parroquia = this.parroquiaDpa();
+
+    return allLugares.filter(item => {
+      let matches = false;
+      if (provincia && item.provinciaDpa === provincia) {
+        matches = true;
+      }
+      if (canton && item.cantonDpa === canton) {
+        matches = true;
+      }
+      if (parroquia && item.parroquiaDpa === parroquia) {
+        matches = true;
+      }
+      return matches;
+    });
+  });
+
+  filterMetas = computed<DashboardMeta[]>(() => {
+    const allMetas = this.metas();
+    const lugaresSel = this.filterLugares();
+
+    const parroquiasSeleccionadas = new Set<string>(
+      lugaresSel.map(lugar => lugar.parroquiaId)
+    );
+
+    return allMetas.filter(meta =>
+      parroquiasSeleccionadas.has(meta.metParroquia)
+    );
   });
 
   filterData = computed<DashboardValor[]>(() => {
@@ -76,48 +113,6 @@ export class DataService {
     return totalsArray;
   });
 
-  //totales del seguimiento
-  totalesPorcentajes = computed<CardPorcentaje[]>(() => {
-    const allLugares = this.lugares();
-    const allData = this.data();
-
-    const provinciasMeta = new Set(allLugares.filter(l => l.provinciaDpa.trim().length === 2).map(l => l.provinciaDpa));
-    const provinciasReal = new Set(allData.map(d => d.provinciaDpa));
-
-    const cantonesMeta = new Set(allLugares.filter(l => l.cantonDpa.trim().length === 4).map(l => l.cantonDpa));
-    const cantonesReal = new Set(allData.map(d => d.cantonDpa));
-
-    const parroquiasMeta = new Set(allLugares.filter(l => l.parroquiaDpa.trim().length === 6).map(l => l.parroquiaDpa));
-    const parroquiasReal = new Set(allData.map(d => d.parroquiaDpa));
-
-
-    const resultados: CardPorcentaje[] = [
-      {
-        indId: 'provincias',
-        indNombre: this.indicadoresMap().get('provincias')?.indNombre || 'provincias',
-        planificado: provinciasMeta.size,
-        ejecutado: provinciasReal.size,
-        // porcentaje: (provinciasReal.size / provinciasMeta.size) * 100
-      },
-      {
-        indId: 'cantones',
-        indNombre: this.indicadoresMap().get('cantones')?.indNombre || 'cantones',
-        planificado: cantonesMeta.size,
-        ejecutado: cantonesReal.size,
-        // porcentaje: (cantonesReal.size / cantonesMeta.size) * 100
-      },
-      {
-        indId: 'parroquias',
-        indNombre: this.indicadoresMap().get('parroquias')?.indNombre || 'parroquias',
-        planificado: parroquiasMeta.size,
-        ejecutado: parroquiasReal.size,
-        // porcentaje: (parroquiasReal.size / parroquiasMeta.size) * 100
-      }
-    ];
-
-    return resultados;
-  });
-
   // data para graficos de barras
   getConsolidatedDataByIndId(indId: string): { labels: string[], values: number[], title: string } {
     const filteredByDpa = this.filterData();
@@ -163,6 +158,10 @@ export class DataService {
       this.lugares.set(data);
       // console.log(this.lugares());
     });
+    this.http.get<DashboardMeta[]>(this.dashboardUrlMetas).subscribe(data => {
+      this.metas.set(data);
+      // console.log(this.lugares());
+    });
   }
 
   lugaresProvincias = computed<DashboardLugar[]>(() => {
@@ -196,6 +195,80 @@ export class DataService {
         estado: estado
       };
     });
+  });
+
+  //**********************DATOS DE PORCENTAJES****************
+  //totales del seguimiento
+  porcentajesTotales = computed<CardPorcentaje[]>(() => {
+    const allLugares = this.lugares();
+    const allData = this.data();
+
+    const provinciasMeta = new Set(allLugares.filter(l => l.provinciaDpa.trim().length === 2).map(l => l.provinciaDpa));
+    const provinciasReal = new Set(allData.map(d => d.provinciaDpa));
+
+    const cantonesMeta = new Set(allLugares.filter(l => l.cantonDpa.trim().length === 4).map(l => l.cantonDpa));
+    const cantonesReal = new Set(allData.map(d => d.cantonDpa));
+
+    const parroquiasMeta = new Set(allLugares.filter(l => l.parroquiaDpa.trim().length === 6).map(l => l.parroquiaDpa));
+    const parroquiasReal = new Set(allData.map(d => d.parroquiaDpa));
+
+
+    const resultados: CardPorcentaje[] = [
+      {
+        indId: 'provincias',
+        indNombre: this.indicadoresMap().get('provincias')?.indNombre || 'provincias',
+        planificado: provinciasMeta.size,
+        ejecutado: provinciasReal.size,
+        // porcentaje: (provinciasReal.size / provinciasMeta.size) * 100
+      },
+      {
+        indId: 'cantones',
+        indNombre: this.indicadoresMap().get('cantones')?.indNombre || 'cantones',
+        planificado: cantonesMeta.size,
+        ejecutado: cantonesReal.size,
+        // porcentaje: (cantonesReal.size / cantonesMeta.size) * 100
+      },
+      {
+        indId: 'parroquias',
+        indNombre: this.indicadoresMap().get('parroquias')?.indNombre || 'parroquias',
+        planificado: parroquiasMeta.size,
+        ejecutado: parroquiasReal.size,
+        // porcentaje: (parroquiasReal.size / parroquiasMeta.size) * 100
+      }
+    ];
+
+    return resultados;
+  });
+
+
+  porcentajesMetaValor = computed<CardPorcentaje[]>(() => {
+    const allIndicadores = this.indicadores();
+    const indicadoresProcess = allIndicadores
+      .filter(item => item.indUbicacion === 'mapa_metas')
+      .sort((a, b) => a.indOrden - b.indOrden);
+    const dataToProcess = this.filterData();
+    const metaToProcess = this.filterMetas();
+
+    const resultados: CardPorcentaje[] = indicadoresProcess.map(indicador => {
+      const real = dataToProcess
+        .filter(item => item.indId === indicador.indId)
+        .reduce((sum, item) => sum + (parseFloat(item.valValor) || 0), 0);
+
+      const meta = metaToProcess
+        .filter(item => item.indId === indicador.indId)
+        .reduce((sum, item) => sum + (parseFloat(item.metValor) || 0), 0);
+
+      // const porcentaje = meta > 0 ? (real / meta) * 100 : 0;
+
+      return {
+        indId: indicador.indId,
+        indNombre: indicador.indNombre,
+        planificado: meta,
+        ejecutado: real,
+        // porcentaje: parseFloat(porcentaje.toFixed(1))
+      };
+    });
+    return resultados;
   });
 
 }

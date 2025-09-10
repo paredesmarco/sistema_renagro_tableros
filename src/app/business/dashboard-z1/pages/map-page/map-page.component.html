@@ -2,10 +2,10 @@
     <app-map-view></app-map-view>
 </div>
 <div class="card-container">
-    @for (valor of valores(); track valor.indId) {
-    <app-card-porcentaje [dato]="valor"></app-card-porcentaje>
+    @for (total of totales(); track total.indId) {
+    <app-card-porcentaje [dato]="total"></app-card-porcentaje>
     }
-    @for (valor of otros(); track valor.indId) {
+    @for (valor of metasValor(); track valor.indId) {
     <app-card-porcentaje [dato]="valor"></app-card-porcentaje>
     }
 </div>
