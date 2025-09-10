@@ -21,4 +21,12 @@ export class CardValueComponent {
     }
     return ((ejecutado / planificado) * 100).toFixed(0);
   });
+
+  ejecutadoFormateado = computed(() => {
+    return this.dato().ejecutado.toFixed(1);
+  });
+
+  planificadoFormateado = computed(() => {
+    return this.dato().planificado.toFixed(1);
+  });
 }

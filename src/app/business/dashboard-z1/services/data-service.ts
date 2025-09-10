@@ -253,10 +253,17 @@ export class DataService {
       const real = dataToProcess
         .filter(item => item.indId === indicador.indId)
         .reduce((sum, item) => sum + (parseFloat(item.valValor) || 0), 0);
-
-      const meta = metaToProcess
-        .filter(item => item.indId === indicador.indId)
-        .reduce((sum, item) => sum + (parseFloat(item.metValor) || 0), 0);
+      let meta = 0;
+      if (indicador.indTipo.localeCompare('% meta') == 0) {
+        meta = metaToProcess
+          .filter(item => item.indId === indicador.indId)
+          .reduce((sum, item) => sum + (parseFloat(item.metValor) || 0), 0);
+      } else {
+        const porcetajeObjetivo = indicador.indTipo.replace('% ', '');
+        meta = dataToProcess
+          .filter(item => item.indId === porcetajeObjetivo)
+          .reduce((sum, item) => sum + (parseFloat(item.valValor) || 0), 0);
+      }
 
       // const porcentaje = meta > 0 ? (real / meta) * 100 : 0;
 
