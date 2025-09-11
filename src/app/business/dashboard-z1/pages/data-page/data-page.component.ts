@@ -13,7 +13,7 @@ import { CardTablaComponent } from "../../components/card-tabla/card-tabla.compo
 
 @Component({
   selector: 'app-data-page',
-  imports: [CardPromedioComponent, CardBarrasComponent, MatTableModule, MatCard, CardTablaComponent],
+  imports: [CardPromedioComponent, CardBarrasComponent, MatTableModule, MatCard, CardTablaComponent, CardValueComponent],
   templateUrl: './data-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './data-page.component.css'
@@ -22,7 +22,8 @@ import { CardTablaComponent } from "../../components/card-tabla/card-tabla.compo
 export default class DataPageComponent {
   private dataService = inject(DataService);
 
-  valores = this.dataService.promedios('promedio_boleta');
+  promedioaBoleta = this.dataService.promedios('promedio_boleta');
+  metasOperativas = this.dataService.porcentajesMetaValor('metas_operativo');
   consolidatedData = signal<CardValor[]>([]);
   dashboardValor = signal<DashboardValor[]>([]);
 }

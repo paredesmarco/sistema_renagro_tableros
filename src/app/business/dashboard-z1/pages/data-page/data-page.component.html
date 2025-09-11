@@ -10,8 +10,11 @@
         </div>
 
         <div class="card-section">
-            @for (valor of valores(); track valor.indId) {
+            @for (valor of promedioaBoleta(); track valor.indId) {
             <app-card-promedio [dato]="valor"></app-card-promedio>
+            }
+            @for (valor of metasOperativas(); track valor.indId) {
+            <app-card-porcentaje [dato]="valor"></app-card-porcentaje>
             }
         </div>
     </mat-card>
