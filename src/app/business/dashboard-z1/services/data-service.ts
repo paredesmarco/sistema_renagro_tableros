@@ -6,6 +6,7 @@ import { DashboardIndicador } from '../interfaces/dashboard-indicador.interface'
 import { DashboardLugar } from '../interfaces/dashboard-lugar.interface';
 import { CardPorcentaje } from '../interfaces/card-porcentaje.interface';
 import { DashboardMeta } from '../interfaces/dashboard-meta.interface';
+import { CardPromedio } from '../interfaces/card-promedio.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -278,4 +279,47 @@ export class DataService {
     return resultados;
   });
 
+  promedios = computed<CardPromedio[]>(() => {
+    const allIndicadores = this.indicadores();
+    const indicadoresProcess = allIndicadores
+      .filter(item => item.indUbicacion === 'promedio_boleta')
+      .sort((a, b) => a.indOrden - b.indOrden);
+    const dataToProcess = this.filterData();
+
+    const resultados: CardPromedio[] = indicadoresProcess.map(indicador => {
+
+      const valoresPromedio = dataToProcess
+        .filter(item => item.indId === indicador.indId)
+        .map(item => parseFloat(item.valValor) || 0);
+
+      const valoresMinimo = dataToProcess
+        .filter(item => item.indId === indicador.indId)
+        .map(item => parseFloat(item.valValorUno) || 0);
+
+      const valoresMaximo = dataToProcess
+        .filter(item => item.indId === indicador.indId)
+        .map(item => parseFloat(item.valValorDos) || 0);
+
+      const promedio = valoresPromedio.length > 0
+        ? valoresPromedio.reduce((sum, value) => sum + value, 0) / valoresPromedio.length
+        : 0;
+
+      const minimo = valoresMinimo.length > 0
+        ? Math.min(...valoresMinimo)
+        : 0;
+
+      const maximo = valoresMaximo.length > 0
+        ? Math.max(...valoresMaximo)
+        : 0;
+
+      return {
+        indId: indicador.indId,
+        indNombre: indicador.indNombre,
+        promedio: promedio,
+        minimo: minimo,
+        maximo: maximo,
+      };
+    });
+    return resultados;
+  });
 }

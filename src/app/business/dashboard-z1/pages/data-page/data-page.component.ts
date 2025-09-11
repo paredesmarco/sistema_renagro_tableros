@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { CardValueComponent } from "../../components/card-porcentaje/card-porcentaje.component";
 import { CardPromedioComponent } from "../../components/card-promedio/card-promedio.component";
 import { Porcentaje } from '../../interfaces/porcentaje.interface';
@@ -10,20 +10,6 @@ import { DashboardValor } from '../../interfaces/dashboard-valor.interface';
 import { MatCard, MatCardHeader, MatCardTitle, MatCardContent } from "@angular/material/card";
 import { CardTablaComponent } from "../../components/card-tabla/card-tabla.component";
 
-const datos: Porcentaje[] = [
-  {
-    titulo: "Boletas diarias por encuestador",
-    minimo: 6,
-    maximo: 10,
-    promedio: 8
-  },
-  {
-    titulo: "Tiempo de la boleta por encuestador",
-    minimo: 30,
-    maximo: 60,
-    promedio: 50
-  }
-]
 
 @Component({
   selector: 'app-data-page',
@@ -33,21 +19,10 @@ const datos: Porcentaje[] = [
   styleUrl: './data-page.component.css'
 })
 
-export default class DataPageComponent implements OnInit {
-  valores = signal(datos);
+export default class DataPageComponent {
+  private dataService = inject(DataService);
+
+  valores = this.dataService.promedios;
   consolidatedData = signal<CardValor[]>([]);
   dashboardValor = signal<DashboardValor[]>([]);
-
-  constructor(private dataService: DataService) { }
-
-  ngOnInit(): void {
-    // this.dataService.getData().subscribe(data => {
-    //   this.dashboardValor.set(data);
-    // });
-    this.dashboardValor.set(this.dataService.data());
-
-    // this.dataService.data().subscribe(data => {
-    //   this.consolidatedData.set(data);
-    // });
-  }
 }

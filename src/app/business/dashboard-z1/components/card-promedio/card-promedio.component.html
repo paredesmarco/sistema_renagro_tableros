@@ -1,21 +1,21 @@
 <mat-card>
     <mat-card-header>
         <mat-card-title class="fixed-title">
-            {{ dato().titulo }}
+            {{ dato().indNombre }}
         </mat-card-title>
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content class="bottom-content-wrapper">
         <div class="left-section">
             <span class="percentage">
-                {{ dato().promedio }}
+                {{ promedioFormateado()}}%
             </span>
         </div>
         <div class="right-section">
             <p>
-                <span><b>Minimo:</b> {{ dato().minimo }}</span>
+                <span><b>Minimo:</b> {{ minimoFormateado() }}</span>
                 <br>
-                <span><b>Maximo:</b> {{ dato().maximo }}</span>
+                <span><b>Maximo:</b> {{ maximoFormateado() }}</span>
             </p>
         </div>
     </mat-card-content>
