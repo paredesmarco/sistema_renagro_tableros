@@ -22,7 +22,7 @@ import { CardTablaComponent } from "../../components/card-tabla/card-tabla.compo
 export default class DataPageComponent {
   private dataService = inject(DataService);
 
-  valores = this.dataService.promedios;
+  valores = this.dataService.promedios('promedio_boleta');
   consolidatedData = signal<CardValor[]>([]);
   dashboardValor = signal<DashboardValor[]>([]);
 }

@@ -35,5 +35,5 @@ const datos: CardPorcentaje[] = [
 export class MapPageComponent {
   private dataService = inject(DataService);
   totales = this.dataService.porcentajesTotales;
-  metasValor = this.dataService.porcentajesMetaValor;
+  metasValor = this.dataService.porcentajesMetaValor('mapa_metas');
 }

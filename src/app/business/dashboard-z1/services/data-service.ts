@@ -241,11 +241,10 @@ export class DataService {
     return resultados;
   });
 
-
-  porcentajesMetaValor = computed<CardPorcentaje[]>(() => {
+  porcentajesMetaValor = (ubicacion: string) => computed<CardPorcentaje[]>(() => {
     const allIndicadores = this.indicadores();
     const indicadoresProcess = allIndicadores
-      .filter(item => item.indUbicacion === 'mapa_metas')
+      .filter(item => item.indUbicacion === ubicacion)
       .sort((a, b) => a.indOrden - b.indOrden);
     const dataToProcess = this.filterData();
     const metaToProcess = this.filterMetas();
@@ -279,15 +278,14 @@ export class DataService {
     return resultados;
   });
 
-  promedios = computed<CardPromedio[]>(() => {
+  promedios = (ubicacion: string) => computed<CardPromedio[]>(() => {
     const allIndicadores = this.indicadores();
     const indicadoresProcess = allIndicadores
-      .filter(item => item.indUbicacion === 'promedio_boleta')
+      .filter(item => item.indUbicacion === ubicacion)
       .sort((a, b) => a.indOrden - b.indOrden);
     const dataToProcess = this.filterData();
 
     const resultados: CardPromedio[] = indicadoresProcess.map(indicador => {
-
       const valoresPromedio = dataToProcess
         .filter(item => item.indId === indicador.indId)
         .map(item => parseFloat(item.valValor) || 0);
