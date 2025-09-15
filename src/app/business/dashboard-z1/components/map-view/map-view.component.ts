@@ -30,9 +30,17 @@ export class MapViewComponent implements AfterViewInit {
   private dataService = inject(DataService);
 
   ngAfterViewInit(): void {
+    this.cargaMapa();
+  }
+
+
+  private cargaMapa(): void {
+    const seleccionadoDpa = this.dataService.seleccionadoDpa();
+    console.log('cargaMapa', seleccionadoDpa);
     this.initMap();
     this.loadPolygons();
   }
+
 
   private initMap(): void {
     this.map = L.map('map', {
@@ -41,7 +49,7 @@ export class MapViewComponent implements AfterViewInit {
     });
 
     L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-      attribution: 'markiup.com',
+      attribution: `markiup.com ${this.dataService.seleccionadoDpa()}`,
       maxZoom: 15,
     }).addTo(this.map);
   }
@@ -52,7 +60,7 @@ export class MapViewComponent implements AfterViewInit {
       return;
     }
 
-    const polygons = this.dataService.lugaresProvincias();
+    const polygons = this.dataService.lugaresPresenta();
     // console.log(polygons);
 
     polygons.forEach(polygon => {
@@ -82,10 +90,18 @@ export class MapViewComponent implements AfterViewInit {
           geoJsonLayer.on('click', (e) => {
             const polygonCode = polygon.parroquiaDpa;
             console.log('Polígono seleccionado:', polygonCode);
-            // Actualizamos la variable provinciaDpa en el servicio
-            this.dataService.provinciaDpa.set(polygonCode);
+            // Actualizamos la variable de la dpa seleccionada en el servicio
+            this.dataService.seleccionadoDpa.set(polygonCode);
           });
 
+          // Agregamos el evento de click al polígono
+          geoJsonLayer.on('dblclick', (e) => {
+            const polygonCode = polygon.parroquiaDpa;
+            console.log('Polígono doble seleccionado:', polygonCode);
+            // Actualizamos la variable de la dpa seleccionada en el servicio
+            this.dataService.seleccionadoDpa.set(polygonCode);
+            this.dataService.padreDpa.set(polygonCode);
+          });
         })
         .catch(error => {
           console.error(`Error al cargar el polígono ${polygon.parroquiaDpa}:`, error);

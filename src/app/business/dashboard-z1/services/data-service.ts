@@ -21,15 +21,33 @@ export class DataService {
   private dashboardUrlAvances = 'http://localhost:3000/api/avance';
   private http = inject(HttpClient);
 
-  provinciaDpa = signal<string>('08');
-  cantonDpa = signal<string>('');
-  parroquiaDpa = signal<string>('');
+  padreDpa = signal<string>('');
+  seleccionadoDpa = signal<string>('');
 
   indicadores = signal<DashboardIndicador[]>([]);
   lugares = signal<DashboardLugar[]>([]);
   metas = signal<DashboardMeta[]>([]);
   avances = signal<DashboardAvance[]>([]);
   data = signal<DashboardValor[]>([]);
+
+  constructor() {
+    this.http.get<DashboardValor[]>(this.dataUrl).subscribe(data => {
+      this.data.set(data);
+    });
+    this.http.get<DashboardIndicador[]>(this.dashboardUrlIndicadores).subscribe(data => {
+      this.indicadores.set(data);
+    });
+    this.http.get<DashboardLugar[]>(this.dashboardUrlLugares).subscribe(data => {
+      this.lugares.set(data);
+    });
+    this.http.get<DashboardMeta[]>(this.dashboardUrlMetas).subscribe(data => {
+      this.metas.set(data);
+    });
+    this.http.get<DashboardAvance[]>(this.dashboardUrlAvances).subscribe(data => {
+      this.avances.set(data);
+    });
+  }
+
 
   private indicadoresMap = computed(() => {
     const indicadorMap = new Map<string, DashboardIndicador>();
@@ -39,19 +57,18 @@ export class DataService {
 
   filterLugares = computed<DashboardLugar[]>(() => {
     const allLugares = this.lugares();
-    const provincia = this.provinciaDpa();
-    const canton = this.cantonDpa();
-    const parroquia = this.parroquiaDpa();
+    const padreDpa = this.padreDpa();
 
+    console.log(`filterLugares: ${padreDpa} ${padreDpa.length}`)
     return allLugares.filter(item => {
       let matches = false;
-      if (provincia && item.provinciaDpa === provincia) {
+      if (padreDpa.length == 2 && item.parroquiaDpa.trim().length === 4 && item.provinciaDpa === padreDpa) {
         matches = true;
       }
-      if (canton && item.cantonDpa === canton) {
+      if (padreDpa.length == 4 && item.parroquiaDpa.trim().length === 6 && item.cantonDpa === padreDpa) {
         matches = true;
       }
-      if (parroquia && item.parroquiaDpa === parroquia) {
+      if (padreDpa.length < 1 && item.parroquiaDpa.trim().length === 2) {
         matches = true;
       }
       return matches;
@@ -86,19 +103,21 @@ export class DataService {
 
   filterData = computed<DashboardValor[]>(() => {
     const allData = this.data();
-    const provincia = this.provinciaDpa();
-    const canton = this.cantonDpa();
-    const parroquia = this.parroquiaDpa();
+    const seleccionado = this.seleccionadoDpa().trim();
+    console.log(`filterData: ${seleccionado} ${seleccionado.length}`)
 
     return allData.filter(item => {
       let matches = false;
-      if (provincia && item.provinciaDpa === provincia) {
+      if (seleccionado.length < 2) {
         matches = true;
       }
-      if (canton && item.cantonDpa === canton) {
+      if (seleccionado.length == 2 && item.provinciaDpa === seleccionado) {
         matches = true;
       }
-      if (parroquia && item.parroquiaDpa === parroquia) {
+      if (seleccionado.length == 4 && item.cantonDpa === seleccionado) {
+        matches = true;
+      }
+      if (seleccionado.length == 6 && item.parroquiaDpa === seleccionado) {
         matches = true;
       }
       return matches;
@@ -163,30 +182,28 @@ export class DataService {
     };
   }
 
-  constructor() {
-    this.http.get<DashboardValor[]>(this.dataUrl).subscribe(data => {
-      this.data.set(data);
-    });
-    this.http.get<DashboardIndicador[]>(this.dashboardUrlIndicadores).subscribe(data => {
-      this.indicadores.set(data);
-    });
-    this.http.get<DashboardLugar[]>(this.dashboardUrlLugares).subscribe(data => {
-      this.lugares.set(data);
-    });
-    this.http.get<DashboardMeta[]>(this.dashboardUrlMetas).subscribe(data => {
-      this.metas.set(data);
-    });
-    this.http.get<DashboardAvance[]>(this.dashboardUrlAvances).subscribe(data => {
-      this.avances.set(data);
-    });
-  }
-
-  lugaresProvincias = computed<DashboardLugar[]>(() => {
+  lugaresPresenta = computed<DashboardLugar[]>(() => {
     const allLugares = this.lugares();
     const allData = this.data();
+    const seleccionado = this.seleccionadoDpa();
 
-    // Filtra para obtener solo las provincias (aquellas con DPA de 2 dígitos)
-    const lugaresProvincias = allLugares.filter(item => item.parroquiaDpa.trim().length === 2);
+
+    // Filtra para obtener los lugares a presentar en el mapa
+    let lugaresMuestra = <DashboardLugar[]>([]);
+    switch (seleccionado.length) {
+      case 4:
+        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 6);
+        break;
+      case 2:
+        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 4);
+        break;
+      default:
+        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 2);
+        break;
+    }
+    console.log('lugaresPresenta');
+    console.log(allLugares.length);
+    console.log(lugaresMuestra);
 
     // Contar los registros de datos por provincia
     const countMap = new Map<string, number>();
@@ -196,7 +213,7 @@ export class DataService {
       countMap.set(provinciaDpa, currentCount + 1);
     });
 
-    return lugaresProvincias.map(lugar => {
+    return lugaresMuestra.map(lugar => {
       const count = countMap.get(lugar.provinciaDpa) || 0;
       let estado: string | null = 'nr';
       if (count > 100) {
