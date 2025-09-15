@@ -7,6 +7,7 @@ import { DashboardLugar } from '../interfaces/dashboard-lugar.interface';
 import { CardPorcentaje } from '../interfaces/card-porcentaje.interface';
 import { DashboardMeta } from '../interfaces/dashboard-meta.interface';
 import { CardPromedio } from '../interfaces/card-promedio.interface';
+import { DashboardAvance } from '../interfaces/dashboard-avance.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class DataService {
   private dashboardUrlIndicadores = 'http://localhost:3000/api/indicadores';
   private dashboardUrlLugares = 'http://localhost:3000/api/lugares';
   private dashboardUrlMetas = 'http://localhost:3000/api/metas';
+  private dashboardUrlAvances = 'http://localhost:3000/api/avance';
   private http = inject(HttpClient);
 
   provinciaDpa = signal<string>('08');
@@ -26,6 +28,7 @@ export class DataService {
   indicadores = signal<DashboardIndicador[]>([]);
   lugares = signal<DashboardLugar[]>([]);
   metas = signal<DashboardMeta[]>([]);
+  avances = signal<DashboardAvance[]>([]);
   data = signal<DashboardValor[]>([]);
 
   private indicadoresMap = computed(() => {
@@ -65,6 +68,19 @@ export class DataService {
 
     return allMetas.filter(meta =>
       parroquiasSeleccionadas.has(meta.metParroquia)
+    );
+  });
+
+  filterAvances = computed<DashboardAvance[]>(() => {
+    const allAvances = this.avances();
+    const lugaresSel = this.filterLugares();
+
+    const parroquiasSeleccionadas = new Set<string>(
+      lugaresSel.map(lugar => lugar.parroquiaId)
+    );
+
+    return allAvances.filter(meta =>
+      parroquiasSeleccionadas.has(meta.avaParroquia)
     );
   });
 
@@ -153,15 +169,15 @@ export class DataService {
     });
     this.http.get<DashboardIndicador[]>(this.dashboardUrlIndicadores).subscribe(data => {
       this.indicadores.set(data);
-      // console.log(this.indicadores());
     });
     this.http.get<DashboardLugar[]>(this.dashboardUrlLugares).subscribe(data => {
       this.lugares.set(data);
-      // console.log(this.lugares());
     });
     this.http.get<DashboardMeta[]>(this.dashboardUrlMetas).subscribe(data => {
       this.metas.set(data);
-      // console.log(this.lugares());
+    });
+    this.http.get<DashboardAvance[]>(this.dashboardUrlAvances).subscribe(data => {
+      this.avances.set(data);
     });
   }
 
@@ -250,9 +266,18 @@ export class DataService {
     const metaToProcess = this.filterMetas();
 
     const resultados: CardPorcentaje[] = indicadoresProcess.map(indicador => {
-      const real = dataToProcess
+      const valor = dataToProcess
         .filter(item => item.indId === indicador.indId)
         .reduce((sum, item) => sum + (parseFloat(item.valValor) || 0), 0);
+
+      const avanceInd = this.filterAvances()
+        .filter(item => item.indId === indicador.indId)
+        .reduce((sum, item) => sum + (parseFloat(item.avaValor) || 0), 0);
+      // console.log(this.avances().map(item => item.indId));
+
+      console.log(avanceInd);
+      const real = valor + avanceInd;
+
       let meta = 0;
       if (indicador.indTipo.localeCompare('% meta') == 0) {
         meta = metaToProcess
