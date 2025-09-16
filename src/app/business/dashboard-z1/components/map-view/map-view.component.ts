@@ -53,18 +53,17 @@ export class MapViewComponent {
   }
 
   private initMap(): void {
-    const dpaSeleccionada = this.dataService.seleccionadoDpa();
+    const padreDpa = this.dataService.padreDpa();
+    const seleccionadoDpa = this.dataService.seleccionadoDpa();
 
     // Determinamos el centro y el nivel de zoom
     let center: L.LatLngExpression = [this.dataService.latitud(), this.dataService.longitud()];
 
     let zoomLevel = 8;
-    if (dpaSeleccionada.length === 2) {
+    if (padreDpa.length === 2) {
       zoomLevel = 9;
-    } else if (dpaSeleccionada.length === 4) {
+    } else if (padreDpa.length === 4) {
       zoomLevel = 10;
-    } else if (dpaSeleccionada.length === 6) {
-      zoomLevel = 11;
     }
 
     this.map = L.map('map', {
@@ -73,7 +72,7 @@ export class MapViewComponent {
     });
 
     L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-      attribution: `markiup.com ${dpaSeleccionada}`,
+      attribution: `markiup.com ${seleccionadoDpa}`,
       maxZoom: 15,
     }).addTo(this.map);
   }

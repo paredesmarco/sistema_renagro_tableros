@@ -61,7 +61,7 @@ export class DataService {
     const allLugares = this.lugares();
     const padreDpa = this.padreDpa();
 
-    console.log(`filterLugares: ${padreDpa} ${padreDpa.length}`)
+    // console.log(`filterLugares: ${padreDpa} ${padreDpa.length}`)
     return allLugares.filter(item => {
       let matches = false;
       if (padreDpa.length == 2 && item.parroquiaDpa.trim().length === 4 && item.provinciaDpa === padreDpa) {
@@ -106,7 +106,7 @@ export class DataService {
   filterData = computed<DashboardValor[]>(() => {
     const allData = this.data();
     const seleccionado = this.seleccionadoDpa().trim();
-    console.log(`filterData: ${seleccionado} ${seleccionado.length}`)
+    // console.log(`filterData: ${seleccionado} ${seleccionado.length}`)
 
     return allData.filter(item => {
       let matches = false;
@@ -203,9 +203,6 @@ export class DataService {
         lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 2);
         break;
     }
-    console.log('lugaresPresenta');
-    console.log(allLugares.length);
-    console.log(lugaresMuestra);
 
     // Contar los registros de datos por provincia
     const countMap = new Map<string, number>();
@@ -292,9 +289,7 @@ export class DataService {
       const avanceInd = this.filterAvances()
         .filter(item => item.indId === indicador.indId)
         .reduce((sum, item) => sum + (parseFloat(item.avaValor) || 0), 0);
-      // console.log(this.avances().map(item => item.indId));
 
-      console.log(avanceInd);
       const real = valor + avanceInd;
 
       let meta = 0;
