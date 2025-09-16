@@ -22,8 +22,9 @@ import { CardTablaComponent } from "../../components/card-tabla/card-tabla.compo
 export default class DataPageComponent {
   private dataService = inject(DataService);
 
-  promedioaBoleta = this.dataService.promedios('promedio_boleta');
-  metasOperativas = this.dataService.porcentajesMetaValor('metas_operativo');
+  promedioaBoleta = this.dataService.promedios('data_promedio');
+  indicadoresBarras = this.dataService.indicadoresPorUbicacion('data_barras');
+  metasOperativas = this.dataService.porcentajesMetaValor('data_meta');
   consolidatedData = signal<CardValor[]>([]);
   dashboardValor = signal<DashboardValor[]>([]);
 }

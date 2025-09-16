@@ -65,14 +65,9 @@ export class CardBarrasComponent {
 
   public barChartType: ChartType = 'bar';
 
-  // Usamos effect() para reaccionar a los cambios en el servicio
   constructor() {
     effect(() => {
-      // Al llamar a la señal aquí, el 'effect' se activará
-      // cada vez que la señal 'filterData' cambie de valor.
       this.dataService.filterData();
-
-      // Llamamos al método que procesa los datos para actualizar el componente
       this.processData();
     });
   }

@@ -50,6 +50,9 @@ export class DataService {
     });
   }
 
+  indicadoresPorUbicacion = (ubicacion: string) => computed<DashboardIndicador[]>(() => {
+    return this.indicadores().filter(item => item.indUbicacion === ubicacion);
+  });
 
   private indicadoresMap = computed(() => {
     const indicadorMap = new Map<string, DashboardIndicador>();
@@ -153,13 +156,13 @@ export class DataService {
 
   // data para graficos de barras
   getConsolidatedDataByIndId(indId: string): { labels: string[], values: number[], title: string } {
-    const filteredByDpa = this.filterData();
-    const filteredData = filteredByDpa.filter(item => item.indId === indId);
+    const filterData = this.filterData();
+    const filteredDataIndice = filterData.filter(item => item.indId === indId);
 
     const consolidatedMap = new Map<string, number>();
     let chartTitle = '';
 
-    filteredData.forEach((item) => {
+    filteredDataIndice.forEach((item) => {
       if (!chartTitle) {
         chartTitle = item.indNombre;
       }
