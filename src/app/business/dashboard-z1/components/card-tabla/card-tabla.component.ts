@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { DataService } from '../../services/data-service';
+import { CardValor } from '../../interfaces/card-valor.interface';
 
 @Component({
   selector: 'app-card-tabla',
@@ -12,12 +13,23 @@ import { DataService } from '../../services/data-service';
 })
 export class CardTablaComponent {
   dataService = inject(DataService);
-  indOrigen = input.required<string[]>();
+
+  ubicacion = input.required<string>();
   titulo = input.required<string>();
 
   displayedColumns: string[] = ['indNombre', 'valor'];
 
   filteredData = computed(() => {
-    return this.dataService.totalIndices().filter(item => this.indOrigen().includes(item.indId));
+    const indicadores = this.dataService.indicadoresPorUbicacion(this.ubicacion())();
+    const valores = this.dataService.totalIndices();
+    const totales: CardValor[] = indicadores.map(indicador => {
+      const valorEncontrado = valores.find(val => val.indId === indicador.indId);
+      return {
+        indId: indicador.indId,
+        indNombre: indicador.indNombre,
+        valor: valorEncontrado?.valor || 0
+      };
+    });
+    return totales;
   });
 }

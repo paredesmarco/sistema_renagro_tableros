@@ -4,27 +4,6 @@ import { CardValueComponent } from "../../components/card-porcentaje/card-porcen
 import { DataService } from '../../services/data-service';
 import { CardPorcentaje } from '../../interfaces/card-porcentaje.interface';
 
-const datos: CardPorcentaje[] = [
-  {
-    indId: "Superficie agroprecuaria registrada",
-    indNombre: "Superficie agroprecuaria registrada",
-    planificado: 200,
-    ejecutado: 140
-  },
-  {
-    indId: "Superficie forestal registrada",
-    indNombre: "Superficie forestal registrada",
-    planificado: 200,
-    ejecutado: 140
-  },
-  {
-    indId: "Boletas RENAGRO no UPAs",
-    indNombre: "Boletas RENAGRO no UPAs",
-    planificado: 200,
-    ejecutado: 140
-  }
-]
-
 @Component({
   selector: 'app-map-page',
   imports: [MapViewComponent, CardValueComponent],
@@ -35,5 +14,5 @@ const datos: CardPorcentaje[] = [
 export class MapPageComponent {
   private dataService = inject(DataService);
   totales = this.dataService.porcentajesTotales;
-  metasValor = this.dataService.porcentajesMetaValor('metas_mapa');
+  metasValor = this.dataService.porcentajesMetaValor('mapa_metas');
 }
