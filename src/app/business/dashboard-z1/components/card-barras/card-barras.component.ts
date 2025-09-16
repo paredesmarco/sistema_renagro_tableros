@@ -42,24 +42,24 @@ export class CardBarrasComponent {
     return {
       responsive: true,
       maintainAspectRatio: false,
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: this.tituloX(),
-            font: { size: 12 },
-          },
-          ticks: { font: { size: 10 } },
-        },
-        y: {
-          title: {
-            display: true,
-            text: this.tituloY(),
-            font: { size: 12 },
-          },
-          ticks: { font: { size: 10 } },
-        },
-      },
+      // scales: {
+      //   x: {
+      //     title: {
+      //       display: true,
+      //       text: this.tituloX(),
+      //       font: { size: 12 },
+      //     },
+      //     ticks: { font: { size: 10 } },
+      //   },
+      //   y: {
+      //     title: {
+      //       display: true,
+      //       text: this.tituloY(),
+      //       font: { size: 12 },
+      //     },
+      //     ticks: { font: { size: 10 } },
+      //   },
+      // },
     };
   });
 
