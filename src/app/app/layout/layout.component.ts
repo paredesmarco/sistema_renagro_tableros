@@ -33,7 +33,7 @@ export class LayoutComponent {
   status = false;
   token = '';
 
-  title = 'GL-Agro Dashboard';
+  title = 'GL-Agro Dashboard Zona 1';
   menuItems: MenuItem[] = [];
   userName: string = '';
   userRole: string = '';

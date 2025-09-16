@@ -19,7 +19,9 @@ export class CardValueComponent {
     if (planificado === 0) {
       return '0';
     }
-    return ((ejecutado / planificado) * 100).toFixed(0);
+    let porcentaje = (ejecutado / planificado) * 100;
+    porcentaje = porcentaje > 100 ? 100 : porcentaje;
+    return (porcentaje).toFixed(0);
   });
 
   ejecutadoFormateado = computed(() => {

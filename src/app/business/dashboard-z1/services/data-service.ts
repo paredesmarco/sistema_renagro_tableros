@@ -185,17 +185,17 @@ export class DataService {
   lugaresPresenta = computed<DashboardLugar[]>(() => {
     const allLugares = this.lugares();
     const allData = this.data();
-    const seleccionado = this.seleccionadoDpa();
+    const padreDpa = this.padreDpa().trim();
 
 
     // Filtra para obtener los lugares a presentar en el mapa
     let lugaresMuestra = <DashboardLugar[]>([]);
-    switch (seleccionado.length) {
-      case 4:
-        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 6);
-        break;
+    switch (padreDpa.length) {
       case 2:
-        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 4);
+        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 4 && item.provinciaDpa === padreDpa);
+        break;
+      case 4:
+        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 6 && item.cantonDpa === padreDpa);
         break;
       default:
         lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 2);

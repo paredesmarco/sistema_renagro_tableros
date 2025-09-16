@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, viewChild, ElementRef, inject } from '@angular/core';
+import { Component, AfterViewInit, viewChild, ElementRef, inject, effect } from '@angular/core';
 import * as L from 'leaflet';
 import { DataService } from '../../services/data-service';
 
@@ -25,31 +25,55 @@ L.Marker.prototype.options.icon = L.icon({
   templateUrl: './map-view.component.html',
   styleUrl: './map-view.component.css'
 })
-export class MapViewComponent implements AfterViewInit {
+export class MapViewComponent {
   private map!: L.Map;
   private dataService = inject(DataService);
 
-  ngAfterViewInit(): void {
-    this.cargaMapa();
+  constructor() {
+    effect(() => {
+      this.dataService.padreDpa();
+      this.cargaMapa();
+    });
   }
 
-
   private cargaMapa(): void {
-    const seleccionadoDpa = this.dataService.seleccionadoDpa();
-    console.log('cargaMapa', seleccionadoDpa);
+    console.log('cargaMapa');
+    // Limpiamos el mapa existente si ya está inicializado
+    if (this.map) {
+      this.map.eachLayer((layer) => {
+        if (layer instanceof L.GeoJSON || layer instanceof L.TileLayer) {
+          this.map.removeLayer(layer);
+        }
+      });
+      // Destruimos la instancia del mapa para evitar errores
+      this.map.remove();
+    }
+
     this.initMap();
     this.loadPolygons();
   }
 
-
   private initMap(): void {
+    const dpaSeleccionada = this.dataService.seleccionadoDpa();
+
+    // Determinamos el centro y el nivel de zoom
+    let center: L.LatLngExpression = [-0.3306539, -78.6667172];
+    let zoomLevel = 8;
+    if (dpaSeleccionada.length === 2) {
+      zoomLevel = 8;
+    } else if (dpaSeleccionada.length === 4) {
+      zoomLevel = 9;
+    } else if (dpaSeleccionada.length === 6) {
+      zoomLevel = 10;
+    }
+
     this.map = L.map('map', {
-      center: [-0.3306539, -78.6667172],
-      zoom: 8,
+      center: center,
+      zoom: zoomLevel,
     });
 
     L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-      attribution: `markiup.com ${this.dataService.seleccionadoDpa()}`,
+      attribution: `markiup.com ${dpaSeleccionada}`,
       maxZoom: 15,
     }).addTo(this.map);
   }
@@ -61,7 +85,6 @@ export class MapViewComponent implements AfterViewInit {
     }
 
     const polygons = this.dataService.lugaresPresenta();
-    // console.log(polygons);
 
     polygons.forEach(polygon => {
       fetch(`assets/polygons/${polygon.parroquiaDpa}.geojson`)
@@ -72,9 +95,9 @@ export class MapViewComponent implements AfterViewInit {
           return response.json();
         })
         .then(geoJsonData => {
-          let color = polygon.estado == 'ok' ? '#2c6e49' :
-            polygon.estado == 'err' ? '#9d0208' :
-              polygon.estado == 'war' ? '#ff9500' : '#ffffff';
+          let color = polygon.estado === 'ok' ? '#2c6e49' :
+            polygon.estado === 'err' ? '#9d0208' :
+              polygon.estado === 'war' ? '#ff9500' : '#ffffff';
 
           const geoJsonLayer = L.geoJSON(geoJsonData, {
             style: {
@@ -86,20 +109,13 @@ export class MapViewComponent implements AfterViewInit {
             }
           }).addTo(this.map!);
 
-          // Agregamos el evento de click al polígono
           geoJsonLayer.on('click', (e) => {
-            const polygonCode = polygon.parroquiaDpa;
-            console.log('Polígono seleccionado:', polygonCode);
-            // Actualizamos la variable de la dpa seleccionada en el servicio
+            const polygonCode = polygon.parroquiaDpa.trim();
             this.dataService.seleccionadoDpa.set(polygonCode);
           });
 
-          // Agregamos el evento de click al polígono
           geoJsonLayer.on('dblclick', (e) => {
-            const polygonCode = polygon.parroquiaDpa;
-            console.log('Polígono doble seleccionado:', polygonCode);
-            // Actualizamos la variable de la dpa seleccionada en el servicio
-            this.dataService.seleccionadoDpa.set(polygonCode);
+            const polygonCode = polygon.parroquiaDpa.trim();
             this.dataService.padreDpa.set(polygonCode);
           });
         })
