@@ -16,8 +16,8 @@ Chart.register(...registerables);
 export class CardBarrasComponent {
   indId = input.required<string>();
   color = input<string>('#8268a7');
-  tituloX = input<string>('Cultivos');
-  tituloY = input<string>('Hectáreas');
+  // tituloX = input<string>('Cultivos');
+  // tituloY = input<string>('Hectáreas');
 
   private dataService = inject(DataService);
 
