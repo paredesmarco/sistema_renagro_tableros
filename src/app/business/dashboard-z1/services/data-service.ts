@@ -23,6 +23,8 @@ export class DataService {
 
   padreDpa = signal<string>('');
   seleccionadoDpa = signal<string>('');
+  latitud = signal<number>(-0.3306539);
+  longitud = signal<number>(-78.6667172);
 
   indicadores = signal<DashboardIndicador[]>([]);
   lugares = signal<DashboardLugar[]>([]);

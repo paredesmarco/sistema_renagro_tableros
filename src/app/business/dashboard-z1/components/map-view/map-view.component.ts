@@ -37,7 +37,6 @@ export class MapViewComponent {
   }
 
   private cargaMapa(): void {
-    console.log('cargaMapa');
     // Limpiamos el mapa existente si ya está inicializado
     if (this.map) {
       this.map.eachLayer((layer) => {
@@ -57,14 +56,15 @@ export class MapViewComponent {
     const dpaSeleccionada = this.dataService.seleccionadoDpa();
 
     // Determinamos el centro y el nivel de zoom
-    let center: L.LatLngExpression = [-0.3306539, -78.6667172];
+    let center: L.LatLngExpression = [this.dataService.latitud(), this.dataService.longitud()];
+
     let zoomLevel = 8;
     if (dpaSeleccionada.length === 2) {
-      zoomLevel = 8;
-    } else if (dpaSeleccionada.length === 4) {
       zoomLevel = 9;
-    } else if (dpaSeleccionada.length === 6) {
+    } else if (dpaSeleccionada.length === 4) {
       zoomLevel = 10;
+    } else if (dpaSeleccionada.length === 6) {
+      zoomLevel = 11;
     }
 
     this.map = L.map('map', {
@@ -111,12 +111,20 @@ export class MapViewComponent {
 
           geoJsonLayer.on('click', (e) => {
             const polygonCode = polygon.parroquiaDpa.trim();
+            this.dataService.latitud.set(e.latlng.lat);
+            this.dataService.longitud.set(e.latlng.lng);
+            this.map.panTo(e.latlng);
             this.dataService.seleccionadoDpa.set(polygonCode);
           });
 
-          geoJsonLayer.on('dblclick', (e) => {
+          geoJsonLayer.on('contextmenu', (e) => {
             const polygonCode = polygon.parroquiaDpa.trim();
-            this.dataService.padreDpa.set(polygonCode);
+            if (polygonCode.length === 6) {
+              this.dataService.padreDpa.set('');
+              this.dataService.seleccionadoDpa.set('');
+            } else {
+              this.dataService.padreDpa.set(polygonCode);
+            }
           });
         })
         .catch(error => {
