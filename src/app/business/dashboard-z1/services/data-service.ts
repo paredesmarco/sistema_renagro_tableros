@@ -28,19 +28,20 @@ export class DataService {
 
   indicadores = signal<DashboardIndicador[]>([]);
   lugares = signal<DashboardLugar[]>([]);
+  data = signal<DashboardValor[]>([]);
   metas = signal<DashboardMeta[]>([]);
   avances = signal<DashboardAvance[]>([]);
-  data = signal<DashboardValor[]>([]);
 
   constructor() {
-    this.http.get<DashboardValor[]>(this.dataUrl).subscribe(data => {
-      this.data.set(data);
-    });
     this.http.get<DashboardIndicador[]>(this.dashboardUrlIndicadores).subscribe(data => {
       this.indicadores.set(data);
     });
     this.http.get<DashboardLugar[]>(this.dashboardUrlLugares).subscribe(data => {
       this.lugares.set(data);
+    });
+
+    this.http.get<DashboardValor[]>(this.dataUrl).subscribe(data => {
+      this.data.set(data);
     });
     this.http.get<DashboardMeta[]>(this.dashboardUrlMetas).subscribe(data => {
       this.metas.set(data);
@@ -50,8 +51,11 @@ export class DataService {
     });
   }
 
+  /************* INDICADORES *************/
+
   indicadoresPorUbicacion = (ubicacion: string) => computed<DashboardIndicador[]>(() => {
-    return this.indicadores().filter(item => item.indUbicacion === ubicacion);
+    const indicadoresFiltrados = this.indicadores().filter(item => item.indUbicacion === ubicacion);
+    return indicadoresFiltrados.sort((a, b) => a.indOrden - b.indOrden);
   });
 
   private indicadoresMap = computed(() => {
@@ -60,6 +64,7 @@ export class DataService {
     return indicadorMap;
   });
 
+  /************* LUGARES *************/
   filterLugares = computed<DashboardLugar[]>(() => {
     const allLugares = this.lugares();
     const padreDpa = this.padreDpa();
@@ -80,10 +85,60 @@ export class DataService {
     });
   });
 
+
+  lugaresPresenta = computed<DashboardLugar[]>(() => {
+    const allLugares = this.lugares();
+    const allData = this.data();
+    const padreDpa = this.padreDpa().trim();
+
+
+    // Filtra para obtener los lugares a presentar en el mapa
+    let lugaresMuestra = <DashboardLugar[]>([]);
+    switch (padreDpa.length) {
+      case 2:
+        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 4 && item.provinciaDpa === padreDpa);
+        break;
+      case 4:
+        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 6 && item.cantonDpa === padreDpa);
+        break;
+      default:
+        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 2);
+        break;
+    }
+
+    // Contar los registros de datos por provincia
+    const countMap = new Map<string, number>();
+    allData.forEach(item => {
+      const provinciaDpa = item.provinciaDpa;
+      const currentCount = countMap.get(provinciaDpa) || 0;
+      countMap.set(provinciaDpa, currentCount + 1);
+    });
+
+    return lugaresMuestra.map(lugar => {
+      const count = countMap.get(lugar.provinciaDpa) || 0;
+      let estado: string | null = 'nr';
+      if (count > 100) {
+        estado = 'ok';
+      } else if (count >= 50 && count <= 100) {
+        estado = 'war';
+      } else if (count >= 1 && count <= 50) {
+        estado = 'err';
+      }
+      return {
+        ...lugar,
+        parroquiaDpa: lugar.parroquiaDpa.trim(),
+        estado: estado
+      };
+    });
+  });
+
+
+  /************* METAS *************/
   filterMetas = computed<DashboardMeta[]>(() => {
     const allMetas = this.metas();
     const lugaresSel = this.filterLugares();
-
+    console.log(allMetas);
+    console.log(lugaresSel);
     const parroquiasSeleccionadas = new Set<string>(
       lugaresSel.map(lugar => lugar.parroquiaId)
     );
@@ -92,6 +147,8 @@ export class DataService {
       parroquiasSeleccionadas.has(meta.metParroquia)
     );
   });
+
+  /************* AVANCES *************/
 
   filterAvances = computed<DashboardAvance[]>(() => {
     const allAvances = this.avances();
@@ -105,6 +162,8 @@ export class DataService {
       parroquiasSeleccionadas.has(meta.avaParroquia)
     );
   });
+
+  /************* VALORES *************/
 
   filterData = computed<DashboardValor[]>(() => {
     const allData = this.data();
@@ -186,52 +245,6 @@ export class DataService {
       title: chartTitle
     };
   }
-
-  lugaresPresenta = computed<DashboardLugar[]>(() => {
-    const allLugares = this.lugares();
-    const allData = this.data();
-    const padreDpa = this.padreDpa().trim();
-
-
-    // Filtra para obtener los lugares a presentar en el mapa
-    let lugaresMuestra = <DashboardLugar[]>([]);
-    switch (padreDpa.length) {
-      case 2:
-        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 4 && item.provinciaDpa === padreDpa);
-        break;
-      case 4:
-        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 6 && item.cantonDpa === padreDpa);
-        break;
-      default:
-        lugaresMuestra = allLugares.filter(item => item.parroquiaDpa.trim().length === 2);
-        break;
-    }
-
-    // Contar los registros de datos por provincia
-    const countMap = new Map<string, number>();
-    allData.forEach(item => {
-      const provinciaDpa = item.provinciaDpa;
-      const currentCount = countMap.get(provinciaDpa) || 0;
-      countMap.set(provinciaDpa, currentCount + 1);
-    });
-
-    return lugaresMuestra.map(lugar => {
-      const count = countMap.get(lugar.provinciaDpa) || 0;
-      let estado: string | null = 'nr';
-      if (count > 100) {
-        estado = 'ok';
-      } else if (count >= 50 && count <= 100) {
-        estado = 'war';
-      } else if (count >= 1 && count <= 50) {
-        estado = 'err';
-      }
-      return {
-        ...lugar,
-        parroquiaDpa: lugar.parroquiaDpa.trim(),
-        estado: estado
-      };
-    });
-  });
 
   //**********************DATOS DE PORCENTAJES****************
   //totales del seguimiento
