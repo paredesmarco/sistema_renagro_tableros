@@ -169,14 +169,11 @@ export class DataService {
 
   filterAvances = computed<DashboardAvance[]>(() => {
     const allAvances = this.avances();
-    const lugaresSel = this.filterLugares();
+    const allLugares = this.lugares();
+    const dpaSeleccionada = this.seleccionadoDpa().trim();
 
-    const parroquiasSeleccionadas = new Set<string>(
-      lugaresSel.map(lugar => lugar.parroquiaId)
-    );
-
-    return allAvances.filter(meta =>
-      parroquiasSeleccionadas.has(meta.avaParroquia)
+    return allAvances.filter(avance =>
+      this.isLugarSeleccionado(avance.avaParroquia, dpaSeleccionada, allLugares)
     );
   });
 
