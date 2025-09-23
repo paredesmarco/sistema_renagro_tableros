@@ -85,6 +85,26 @@ export class DataService {
     });
   });
 
+  isLugarSeleccionado(parroquiaId: string, dpaSeleccionada: string, lugares: DashboardLugar[]): boolean {
+    //si no se ha seleccionado un filtro
+    if (dpaSeleccionada.length < 2) return true;
+    //si la informacion es consolidada
+    if (parroquiaId === '0') return true;
+    let lugarParroquiaBusca = lugares.filter(item => item.parroquiaId == parroquiaId);
+    if (lugarParroquiaBusca.length < 1) return false;
+    let lugarParroquia = lugarParroquiaBusca[0];
+
+    if (dpaSeleccionada.length == 2 && lugarParroquia.provinciaDpa === dpaSeleccionada) {
+      return true;
+    }
+    if (dpaSeleccionada.length == 4 && lugarParroquia.cantonDpa === dpaSeleccionada) {
+      return true;
+    }
+    if (dpaSeleccionada.length == 6 && lugarParroquia.parroquiaDpa === dpaSeleccionada) {
+      return true;
+    }
+    return false;
+  }
 
   lugaresPresenta = computed<DashboardLugar[]>(() => {
     const allLugares = this.lugares();
@@ -136,16 +156,13 @@ export class DataService {
   /************* METAS *************/
   filterMetas = computed<DashboardMeta[]>(() => {
     const allMetas = this.metas();
-    const lugaresSel = this.filterLugares();
-    console.log(allMetas);
-    console.log(lugaresSel);
-    const parroquiasSeleccionadas = new Set<string>(
-      lugaresSel.map(lugar => lugar.parroquiaId)
-    );
+    const allLugares = this.lugares();
+    const dpaSeleccionada = this.seleccionadoDpa().trim();
 
-    return allMetas.filter(meta =>
-      parroquiasSeleccionadas.has(meta.metParroquia)
+    let metasSelected = allMetas.filter(meta =>
+      this.isLugarSeleccionado(meta.metParroquia, dpaSeleccionada, allLugares)
     );
+    return metasSelected;
   });
 
   /************* AVANCES *************/
