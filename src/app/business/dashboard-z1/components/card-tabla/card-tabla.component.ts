@@ -21,7 +21,7 @@ export class CardTablaComponent {
 
   filteredData = computed(() => {
     const indicadores = this.dataService.indicadoresPorUbicacion(this.ubicacion())();
-    const valores = this.dataService.totalIndices();
+    const valores = this.dataService.totalPorIndicador();
     const totales: CardValor[] = indicadores.map(indicador => {
       const valorEncontrado = valores.find(val => val.indId === indicador.indId);
       return {

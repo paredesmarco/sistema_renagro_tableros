@@ -181,48 +181,43 @@ export class DataService {
 
   filterData = computed<DashboardValor[]>(() => {
     const allData = this.data();
-    const seleccionado = this.seleccionadoDpa().trim();
-    // console.log(`filterData: ${seleccionado} ${seleccionado.length}`)
+    const allLugares = this.lugares();
+    const dpaSeleccionada = this.seleccionadoDpa().trim();
 
-    return allData.filter(item => {
-      let matches = false;
-      if (seleccionado.length < 2) {
-        matches = true;
-      }
-      if (seleccionado.length == 2 && item.provinciaDpa === seleccionado) {
-        matches = true;
-      }
-      if (seleccionado.length == 4 && item.cantonDpa === seleccionado) {
-        matches = true;
-      }
-      if (seleccionado.length == 6 && item.parroquiaDpa === seleccionado) {
-        matches = true;
-      }
-      return matches;
-    });
+    return allData.filter(item =>
+      this.isLugarSeleccionado(item.valParroquia, dpaSeleccionada, allLugares)
+    );
   });
 
-  totalIndices = computed<CardValor[]>(() => {
+  totalPorIndicador = computed<CardValor[]>(() => {
     const dataToProcess = this.filterData();
+    // const avancesToProcess = this.filterAvances();
     const totalsMap = new Map<string, number>();
-    const namesMap = new Map<string, string>();
 
+    // sumo valores
     dataToProcess.forEach(item => {
       const indId = item.indId;
       const value = parseFloat(item.valValor) || 0;
       const currentValue = totalsMap.get(indId) || 0;
       totalsMap.set(indId, currentValue + value);
 
-      if (!namesMap.has(indId)) {
-        namesMap.set(indId, item.indNombre);
-      }
     });
+
+
+    // //sumo avances
+    // avancesToProcess.forEach(item => {
+    //   const indId = item.indId;
+    //   const value = parseFloat(item.avaValor) || 0;
+    //   const currentValue = totalsMap.get(indId) || 0;
+    //   totalsMap.set(indId, currentValue + value);
+    // });
 
     const totalsArray = Array.from(totalsMap, ([indId, valor]) => ({
       indId: indId,
-      indNombre: namesMap.get(indId) || '',
       valor: valor
     }));
+
+    // console.log('totalsArray', totalsArray);
 
     return totalsArray;
   });

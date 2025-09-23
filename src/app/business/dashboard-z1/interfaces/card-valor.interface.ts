@@ -1,5 +1,5 @@
 export interface CardValor {
     indId: string;
-    indNombre: string;
+    indNombre?: string;
     valor: any;
 }
