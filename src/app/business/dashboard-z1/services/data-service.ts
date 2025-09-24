@@ -348,31 +348,63 @@ export class DataService {
       .filter(item => item.indUbicacion === ubicacion)
       .sort((a, b) => a.indOrden - b.indOrden);
     const dataToProcess = this.filterData();
+    const avancesToProcess = this.filterAvances();
 
     const resultados: CardPromedio[] = indicadoresProcess.map(indicador => {
-      const valoresPromedio = dataToProcess
-        .filter(item => item.indId === indicador.indId)
-        .map(item => parseFloat(item.valValor) || 0);
 
-      const valoresMinimo = dataToProcess
-        .filter(item => item.indId === indicador.indId)
-        .map(item => parseFloat(item.valValorUno) || 0);
+      let promedio = 0;
+      let minimo = 0;
+      let maximo = 0;
 
-      const valoresMaximo = dataToProcess
-        .filter(item => item.indId === indicador.indId)
-        .map(item => parseFloat(item.valValorDos) || 0);
+      //procesa valores
+      const dataIndice = dataToProcess
+        .filter(item => item.indId === indicador.indId);
+      if (dataIndice.length > 0) {
+        promedio = parseFloat(dataIndice[0].valValor) || 0;
+        minimo = parseFloat(dataIndice[0].valValorUno) || promedio;
+        maximo = parseFloat(dataIndice[0].valValorDos) || promedio;
 
-      const promedio = valoresPromedio.length > 0
-        ? valoresPromedio.reduce((sum, value) => sum + value, 0) / valoresPromedio.length
-        : 0;
 
-      const minimo = valoresMinimo.length > 0
-        ? Math.min(...valoresMinimo)
-        : 0;
+        for (let i = 1; i < dataIndice.length; i++) {
+          const valorActual = parseFloat(dataIndice[i].valValor) || 0;
+          const minimoActual = parseFloat(dataIndice[i].valValorUno) || valorActual;
+          const maximoActual = parseFloat(dataIndice[i].valValorDos) || valorActual;
 
-      const maximo = valoresMaximo.length > 0
-        ? Math.max(...valoresMaximo)
-        : 0;
+          promedio += valorActual;
+          if (minimoActual < minimo) {
+            minimo = minimoActual;
+          }
+          if (maximoActual > maximo) {
+            maximo = maximoActual;
+          }
+        }
+        promedio = promedio / dataIndice.length;
+      } else {
+        //procesa avances
+        const avanceIndice = avancesToProcess
+          .filter(item => item.indId === indicador.indId && (+item.avaValor) > 0);
+
+        if (avanceIndice.length > 0) {
+          promedio = parseFloat(avanceIndice[0].avaValor) || 0;
+          minimo = promedio;
+          maximo = promedio;
+          for (let i = 1; i < avanceIndice.length; i++) {
+            const valorActual = parseFloat(avanceIndice[i].avaValor) || 0;
+            const minimoActual = valorActual;
+            const maximoActual = valorActual;
+
+            promedio += valorActual;
+            if (minimoActual < minimo) {
+              minimo = minimoActual;
+            }
+            if (maximoActual > maximo) {
+              maximo = maximoActual;
+            }
+          }
+          promedio = promedio / avanceIndice.length;
+        }
+
+      }
 
       return {
         indId: indicador.indId,
