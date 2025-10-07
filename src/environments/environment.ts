@@ -141,5 +141,15 @@ export const environment = {
 
   API_PFL_APP_GET:
     'http://10.10.1.243:3004/api-servicios/permisos/findByPflIdByApliId/',
+
+
+  /**
+   * DASHBOARD Z1
+   */
+  API_DASHBOARD_INDICADOR: 'http://localhost:3023/api-renagro/indicador/find',
+  API_DASHBOARD_LUGAR: 'http://localhost:3023/api-renagro/lugar/find',
+  API_DASHBOARD_VALOR: 'http://localhost:3023/api-renagro/valor/find',
+  API_DASHBOARD_META: 'http://localhost:3023/api-renagro/meta/find',
+  API_DASHBOARD_AVANCE: 'http://localhost:3023/api-renagro/avance/find',
 };
 

@@ -8,17 +8,20 @@ import { CardPorcentaje } from '../interfaces/card-porcentaje.interface';
 import { DashboardMeta } from '../interfaces/dashboard-meta.interface';
 import { CardPromedio } from '../interfaces/card-promedio.interface';
 import { DashboardAvance } from '../interfaces/dashboard-avance.interface';
+import { environment } from '../../../../environments/environment';
+import { DashboardData } from '../interfaces/dashboard-data.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  private dataUrl = 'http://localhost:3000/api/consulta';
-  private dashboardUrlIndicadores = 'http://localhost:3000/api/indicadores';
-  private dashboardUrlLugares = 'http://localhost:3000/api/lugares';
-  private dashboardUrlMetas = 'http://localhost:3000/api/metas';
-  private dashboardUrlAvances = 'http://localhost:3000/api/avance';
+  private dataUrl = environment.API_DASHBOARD_VALOR;
+  private dashboardUrlIndicadores = environment.API_DASHBOARD_INDICADOR;
+  private dashboardUrlLugares = environment.API_DASHBOARD_LUGAR;
+  private dashboardUrlMetas = environment.API_DASHBOARD_META;
+  private dashboardUrlAvances = environment.API_DASHBOARD_AVANCE;
+
   private http = inject(HttpClient);
 
   padreDpa = signal<string>('');
@@ -28,7 +31,7 @@ export class DataService {
 
   indicadores = signal<DashboardIndicador[]>([]);
   lugares = signal<DashboardLugar[]>([]);
-  data = signal<DashboardValor[]>([]);
+  valores = signal<DashboardValor[]>([]);
   metas = signal<DashboardMeta[]>([]);
   avances = signal<DashboardAvance[]>([]);
 
@@ -41,7 +44,7 @@ export class DataService {
     });
 
     this.http.get<DashboardValor[]>(this.dataUrl).subscribe(data => {
-      this.data.set(data);
+      this.valores.set(data);
     });
     this.http.get<DashboardMeta[]>(this.dashboardUrlMetas).subscribe(data => {
       this.metas.set(data);
@@ -129,8 +132,8 @@ export class DataService {
     // Contar los registros de datos por provincia
     const countMap = new Map<string, number>();
     allData.forEach(item => {
-      const provinciaDpa = item.provinciaDpa;
-      const currentCount = countMap.get(provinciaDpa) || 0;
+      const provinciaDpa = item.provinciaDpa ?? "";
+      const currentCount = countMap.get(provinciaDpa) ?? 0;
       countMap.set(provinciaDpa, currentCount + 1);
     });
 
@@ -179,7 +182,41 @@ export class DataService {
 
   /************* VALORES *************/
 
-  filterData = computed<DashboardValor[]>(() => {
+  data = computed<DashboardData[]>(() => {
+    const allData = this.valores();
+    const allLugares = this.lugares();
+    const alIndicadores = this.indicadores();
+
+    if (!allData || !allLugares || !alIndicadores) {
+      return [];
+    }
+
+    const indicadoresMap = new Map<string, DashboardIndicador>(
+      alIndicadores.map(indicador => [indicador.indId, indicador])
+    );
+    const lugaresMap = new Map<string, DashboardLugar>(
+      allLugares.map(lugar => [lugar.parroquiaId, lugar])
+    );
+
+    return allData.map(valor => {
+      const indicador = indicadoresMap.get(valor.indId);
+      const lugar = lugaresMap.get(valor.valParroquia);
+      return {
+        ...valor,
+        indNombre: indicador?.indNombre,
+        indTipo: indicador?.indTipo,
+        provinciaDpa: lugar?.provinciaDpa,
+        cantonDpa: lugar?.cantonDpa,
+        parroquiaDpa: lugar?.parroquiaDpa,
+        valValor: parseFloat(valor.valValor),
+        valValorUno: valor.valValorUno ? parseFloat(valor.valValorUno) : null,
+        valValorDos: valor.valValorDos ? parseFloat(valor.valValorDos) : null,
+      };
+    });
+  });
+
+
+  filterData = computed<DashboardData[]>(() => {
     const allData = this.data();
     const allLugares = this.lugares();
     const dpaSeleccionada = this.seleccionadoDpa().trim();
@@ -197,7 +234,7 @@ export class DataService {
     // sumo valores
     dataToProcess.forEach(item => {
       const indId = item.indId;
-      const value = parseFloat(item.valValor) || 0;
+      const value = item.valValor;
       const currentValue = totalsMap.get(indId) || 0;
       totalsMap.set(indId, currentValue + value);
 
@@ -232,10 +269,10 @@ export class DataService {
 
     filteredDataIndice.forEach((item) => {
       if (!chartTitle) {
-        chartTitle = item.indNombre;
+        chartTitle = item.indNombre ?? '';
       }
       const category = item.valCategoria ?? '-Categoria No Definida-';
-      const value = parseFloat(item.valValor) || 0;
+      const value = item.valValor;
 
       const currentValue = consolidatedMap.get(category) || 0;
       consolidatedMap.set(category, currentValue + value);
@@ -309,7 +346,7 @@ export class DataService {
     const resultados: CardPorcentaje[] = indicadoresProcess.map(indicador => {
       const valor = dataToProcess
         .filter(item => item.indId === indicador.indId)
-        .reduce((sum, item) => sum + (parseFloat(item.valValor) || 0), 0);
+        .reduce((sum, item) => sum + (item.valValor), 0);
 
       const avanceInd = this.filterAvances()
         .filter(item => item.indId === indicador.indId)
@@ -326,7 +363,7 @@ export class DataService {
         const porcetajeObjetivo = indicador.indTipo.replace('% ', '');
         meta = dataToProcess
           .filter(item => item.indId === porcetajeObjetivo)
-          .reduce((sum, item) => sum + (parseFloat(item.valValor) || 0), 0);
+          .reduce((sum, item) => sum + (item.valValor), 0);
       }
 
       // const porcentaje = meta > 0 ? (real / meta) * 100 : 0;
@@ -360,15 +397,15 @@ export class DataService {
       const dataIndice = dataToProcess
         .filter(item => item.indId === indicador.indId);
       if (dataIndice.length > 0) {
-        promedio = parseFloat(dataIndice[0].valValor) || 0;
-        minimo = parseFloat(dataIndice[0].valValorUno) || promedio;
-        maximo = parseFloat(dataIndice[0].valValorDos) || promedio;
+        promedio = dataIndice[0].valValor || 0;
+        minimo = dataIndice[0].valValorUno || promedio;
+        maximo = dataIndice[0].valValorDos || promedio;
 
 
         for (let i = 1; i < dataIndice.length; i++) {
-          const valorActual = parseFloat(dataIndice[i].valValor) || 0;
-          const minimoActual = parseFloat(dataIndice[i].valValorUno) || valorActual;
-          const maximoActual = parseFloat(dataIndice[i].valValorDos) || valorActual;
+          const valorActual = dataIndice[i].valValor || 0;
+          const minimoActual = dataIndice[i].valValorUno || valorActual;
+          const maximoActual = dataIndice[i].valValorDos || valorActual;
 
           promedio += valorActual;
           if (minimoActual < minimo) {

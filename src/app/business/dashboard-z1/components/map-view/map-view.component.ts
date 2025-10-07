@@ -94,9 +94,7 @@ export class MapViewComponent {
           return response.json();
         })
         .then(geoJsonData => {
-          let color = polygon.estado === 'ok' ? '#2c6e49' :
-            polygon.estado === 'err' ? '#9d0208' :
-              polygon.estado === 'war' ? '#ff9500' : '#ffffff';
+          let color = '#ffffff';
 
           const geoJsonLayer = L.geoJSON(geoJsonData, {
             style: {
