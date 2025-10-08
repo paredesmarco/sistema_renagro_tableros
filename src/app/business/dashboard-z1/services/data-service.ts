@@ -1,5 +1,5 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DashboardValor } from '../interfaces/dashboard-valor.interface';
 import { CardValor } from '../interfaces/card-valor.interface';
 import { DashboardIndicador } from '../interfaces/dashboard-indicador.interface';
@@ -35,21 +35,35 @@ export class DataService {
   metas = signal<DashboardMeta[]>([]);
   avances = signal<DashboardAvance[]>([]);
 
-  constructor() {
-    this.http.get<DashboardIndicador[]>(this.dashboardUrlIndicadores).subscribe(data => {
-      this.indicadores.set(data);
+  constructor() { this.initData() }
+
+  async initData() {
+    console.log('ngOnit')
+
+    let token = (await localStorage.getItem('token')) || '';
+    console.log(token);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + token,
     });
-    this.http.get<DashboardLugar[]>(this.dashboardUrlLugares).subscribe(data => {
+
+    this.http.get<DashboardIndicador[]>(this.dashboardUrlIndicadores, { headers })
+      .subscribe(data => {
+        this.indicadores.set(data);
+      });
+
+    this.http.get<DashboardLugar[]>(this.dashboardUrlLugares, { headers }).subscribe(data => {
       this.lugares.set(data);
     });
 
-    this.http.get<DashboardValor[]>(this.dataUrl).subscribe(data => {
+    this.http.get<DashboardValor[]>(this.dataUrl, { headers }).subscribe(data => {
       this.valores.set(data);
     });
-    this.http.get<DashboardMeta[]>(this.dashboardUrlMetas).subscribe(data => {
+    this.http.get<DashboardMeta[]>(this.dashboardUrlMetas, { headers }).subscribe(data => {
       this.metas.set(data);
     });
-    this.http.get<DashboardAvance[]>(this.dashboardUrlAvances).subscribe(data => {
+    this.http.get<DashboardAvance[]>(this.dashboardUrlAvances, { headers }).subscribe(data => {
       this.avances.set(data);
     });
   }

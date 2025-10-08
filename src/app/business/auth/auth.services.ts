@@ -19,6 +19,8 @@ export class AuthService {
       ipWan: '127.0.0.1',
       apliId: environment.ID_APP,
     };
+    console.log(JSON.stringify(data));
+    console.log(userApli + ':' + passApli);
     const head = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: 'Basic ' + window.btoa(userApli + ':' + passApli),
